@@ -1,0 +1,33 @@
+name: Feature Request
+description: Suggest new questions or improvements
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for your suggestion!
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - New iOS Questions
+        - New Flutter Questions
+        - New React Native Questions
+        - New General Questions
+        - New Platform/Topic
+        - Documentation Improvement
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe your suggestion in detail
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Questions
+      description: If suggesting new questions, provide examples

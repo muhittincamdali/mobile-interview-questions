@@ -1,0 +1,32 @@
+name: Bug Report
+description: Report incorrect information or broken content
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting an issue!
+  - type: dropdown
+    id: section
+    attributes:
+      label: Section
+      options:
+        - iOS Questions
+        - Flutter Questions
+        - React Native Questions
+        - General Mobile Questions
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What's wrong?
+      description: Describe the incorrect information or issue
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested correction
+      description: What should it say instead?
