@@ -5,29 +5,72 @@ labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
-      value: Thanks for your suggestion!
+      value: |
+        Have questions to add? We'd love to include them!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What would you like to add?
+      placeholder: Describe your suggestion...
+    validations:
+      required: true
+
   - type: dropdown
     id: category
     attributes:
       label: Category
       options:
-        - New iOS Questions
-        - New Flutter Questions
-        - New React Native Questions
-        - New General Questions
-        - New Platform/Topic
-        - Documentation Improvement
+        - New Question(s)
+        - New Category
+        - Better Answer
+        - Code Example
+        - Structure Improvement
+        - Other
     validations:
       required: true
-  - type: textarea
-    id: description
+
+  - type: dropdown
+    id: platform
     attributes:
-      label: Description
-      description: Describe your suggestion in detail
+      label: Platform
+      options:
+        - iOS
+        - Android
+        - Cross-Platform
+        - General
     validations:
       required: true
-  - type: textarea
-    id: example
+
+  - type: dropdown
+    id: level
     attributes:
-      label: Example Questions
-      description: If suggesting new questions, provide examples
+      label: Difficulty Level
+      options:
+        - Junior
+        - Mid-Level
+        - Senior
+        - Lead/Principal
+        - All Levels
+    validations:
+      required: true
+
+  - type: textarea
+    id: questions
+    attributes:
+      label: Proposed Questions
+      description: If adding questions, list them
+      placeholder: |
+        1. Question about X
+        2. Question about Y
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I can help write answers
+          required: false

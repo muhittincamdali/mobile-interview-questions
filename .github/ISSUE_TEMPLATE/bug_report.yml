@@ -1,32 +1,63 @@
 name: Bug Report
-description: Report incorrect information or broken content
+description: Report incorrect answers, outdated info, or errors
 title: "[Bug]: "
-labels: ["bug"]
+labels: ["bug", "triage"]
 body:
   - type: markdown
     attributes:
-      value: Thanks for reporting an issue!
-  - type: dropdown
-    id: section
-    attributes:
-      label: Section
-      options:
-        - iOS Questions
-        - Flutter Questions
-        - React Native Questions
-        - General Mobile Questions
-        - Other
-    validations:
-      required: true
+      value: |
+        Help us maintain accurate interview content!
+
   - type: textarea
     id: description
     attributes:
-      label: What's wrong?
-      description: Describe the incorrect information or issue
+      label: Description
+      description: What issue did you find?
+      placeholder: Describe the problem...
     validations:
       required: true
+
   - type: textarea
-    id: suggestion
+    id: location
     attributes:
-      label: Suggested correction
-      description: What should it say instead?
+      label: Location
+      description: Which question/answer?
+      placeholder: |
+        - Category: iOS Memory Management
+        - Question: What is ARC?
+        - Section: Answer
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Issue Type
+      options:
+        - Incorrect Answer
+        - Outdated Information
+        - Code Doesn't Work
+        - Typo/Grammar
+        - Missing Information
+        - Broken Link
+    validations:
+      required: true
+
+  - type: textarea
+    id: correct
+    attributes:
+      label: Correct Information
+      description: What should it say?
+      placeholder: The correct answer is...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues
+          required: true
+        - label: I have verified my correction
+          required: true
