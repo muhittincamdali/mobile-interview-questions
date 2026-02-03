@@ -1,76 +1,80 @@
-# Contributing to Mobile Interview Questions
+# Contributing to SwiftRouter
 
-Thank you for helping expand our question bank! 🎉
+First off, thank you for considering contributing to SwiftRouter! It's people like you that make SwiftRouter such a great tool.
 
-## How to Contribute
+## Code of Conduct
 
-### Adding New Questions
+This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code.
 
-1. Check if the question already exists
-2. Include difficulty level
-3. Provide a quality answer
-4. Add relevant tags/categories
+## How Can I Contribute?
 
-### Improving Existing Content
+### Reporting Bugs
 
-- Better explanations
-- Additional code examples
-- Updated answers for new platform versions
-- Fix incorrect information
+Before creating bug reports, please check the existing issues as you might find out that you don't need to create one. When you are creating a bug report, please include as many details as possible:
 
-### Submitting Changes
+- **Use a clear and descriptive title**
+- **Describe the exact steps which reproduce the problem**
+- **Provide specific examples to demonstrate the steps**
+- **Describe the behavior you observed after following the steps**
+- **Explain which behavior you expected to see instead and why**
+- **Include Swift version and OS version**
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b questions/swift-concurrency`)
-3. Make your changes
-4. Commit (`git commit -m 'Add: Swift concurrency questions'`)
-5. Push (`git push origin questions/swift-concurrency`)
-6. Open a Pull Request
+### Suggesting Enhancements
 
-## Question Template
+Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, please include:
 
-```markdown
-### Question Title
+- **Use a clear and descriptive title**
+- **Provide a step-by-step description of the suggested enhancement**
+- **Provide specific examples to demonstrate the steps**
+- **Describe the current behavior and explain which behavior you expected to see instead**
+- **Explain why this enhancement would be useful**
 
-**Level**: Junior/Mid/Senior
-**Category**: iOS/Android/General
-**Tags**: `swift`, `memory`, `arc`
+### Pull Requests
 
-**Question**:
-What is the question?
+1. Fork the repo and create your branch from `main`
+2. If you've added code that should be tested, add tests
+3. If you've changed APIs, update the documentation
+4. Ensure the test suite passes
+5. Make sure your code follows the existing style (SwiftLint)
+6. Issue that pull request!
 
-**Answer**:
-Detailed answer with explanation.
+## Development Setup
 
-**Code Example** (if applicable):
-\`\`\`swift
-// Code here
-\`\`\`
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/SwiftRouter.git
 
-**Follow-up Questions**:
-- Related question 1
-- Related question 2
+# Navigate to the project
+cd SwiftRouter
+
+# Open in Xcode
+open Package.swift
+
+# Run tests
+swift test
 ```
 
-## Quality Guidelines
+## Style Guide
 
-- Clear, concise questions
-- Accurate, thorough answers
-- Include code when relevant
-- Cite sources for complex topics
-- Keep answers interview-appropriate length
+- Follow [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
+- Use SwiftLint for code style consistency
+- Write meaningful commit messages following [Conventional Commits](https://www.conventionalcommits.org/)
+- Document public APIs with DocC-compatible comments
 
-## Categories
+## Commit Messages
 
-- Language (Swift/Kotlin)
-- UI Frameworks
-- Architecture
-- Networking
-- Storage
-- Concurrency
-- Testing
-- System Design
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
 
-## Questions?
+- `feat:` A new feature
+- `fix:` A bug fix
+- `docs:` Documentation only changes
+- `style:` Code style changes (formatting, semicolons, etc)
+- `refactor:` Code change that neither fixes a bug nor adds a feature
+- `test:` Adding missing tests
+- `chore:` Changes to the build process or auxiliary tools
 
-Open an issue for discussion!
+Example: `feat(deeplink): add universal link support`
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the MIT License.
