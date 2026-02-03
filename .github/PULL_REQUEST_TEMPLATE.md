@@ -1,20 +1,35 @@
 ## Description
 
-<!-- What does this PR do? -->
+<!-- What questions/content does this PR add or change? -->
 
 ## Type of Change
 
-- [ ] New questions added
-- [ ] Answer improvements
-- [ ] Code example fixes
-- [ ] Documentation update
-- [ ] Bug fix
+- [ ] New question(s)
+- [ ] New category
+- [ ] Answer improvement
+- [ ] Bug fix (incorrect info)
+- [ ] Code example addition
+- [ ] Other
+
+## Question Details
+
+- Platform: iOS / Android / General
+- Level: Junior / Mid / Senior
+- Category: 
 
 ## Checklist
 
-- [ ] Questions are relevant to real interviews
-- [ ] Answers are accurate and well-explained
-- [ ] Code examples compile/run correctly
-- [ ] Difficulty level is appropriate
+- [ ] Questions are clear and well-formed
+- [ ] Answers are accurate and complete
+- [ ] Code examples compile/work
+- [ ] Follows the question template
 - [ ] No duplicate questions
-- [ ] Markdown formatting is correct
+- [ ] Appropriate difficulty level assigned
+
+## Related Issues
+
+<!-- Fixes #123 -->
+
+## Additional Notes
+
+<!-- Context about the questions -->

@@ -1,58 +1,76 @@
 # Contributing to Mobile Interview Questions
 
-First off, thanks for taking the time to contribute! 🎉
+Thank you for helping expand our question bank! 🎉
 
-## How Can I Contribute?
+## How to Contribute
 
 ### Adding New Questions
 
+1. Check if the question already exists
+2. Include difficulty level
+3. Provide a quality answer
+4. Add relevant tags/categories
+
+### Improving Existing Content
+
+- Better explanations
+- Additional code examples
+- Updated answers for new platform versions
+- Fix incorrect information
+
+### Submitting Changes
+
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feat/new-ios-questions`)
-3. Add your questions following the format below
-4. Commit your changes (`git commit -m 'feat: add 10 new SwiftUI questions'`)
-5. Push to the branch (`git push origin feat/new-ios-questions`)
+2. Create a feature branch (`git checkout -b questions/swift-concurrency`)
+3. Make your changes
+4. Commit (`git commit -m 'Add: Swift concurrency questions'`)
+5. Push (`git push origin questions/swift-concurrency`)
 6. Open a Pull Request
 
-### Question Format
+## Question Template
 
 ```markdown
-### Q: Your question here?
+### Question Title
 
-**Difficulty:** 🟢 Junior | 🟡 Mid | 🔴 Senior
+**Level**: Junior/Mid/Senior
+**Category**: iOS/Android/General
+**Tags**: `swift`, `memory`, `arc`
 
-Your detailed answer here.
+**Question**:
+What is the question?
 
+**Answer**:
+Detailed answer with explanation.
+
+**Code Example** (if applicable):
 \`\`\`swift
-// Code example if applicable
+// Code here
 \`\`\`
+
+**Follow-up Questions**:
+- Related question 1
+- Related question 2
 ```
 
-### Improving Existing Answers
+## Quality Guidelines
 
-- Fix inaccuracies
-- Add better code examples
-- Improve explanations
-- Add missing edge cases
+- Clear, concise questions
+- Accurate, thorough answers
+- Include code when relevant
+- Cite sources for complex topics
+- Keep answers interview-appropriate length
 
-### Reporting Issues
+## Categories
 
-- Use the bug report template for incorrect information
-- Use the feature request template for new questions
-
-## Guidelines
-
-1. **Accuracy**: All answers must be technically correct
-2. **Clarity**: Write clear, concise explanations
-3. **Code Quality**: All code examples must be syntactically correct and follow best practices
-4. **Difficulty**: Assign appropriate difficulty levels
-5. **No Duplicates**: Check existing questions before adding new ones
-6. **English Only**: All content must be in English
-7. **Real Interview Questions**: Questions should reflect what top companies actually ask
-
-## Code of Conduct
-
-Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+- Language (Swift/Kotlin)
+- UI Frameworks
+- Architecture
+- Networking
+- Storage
+- Concurrency
+- Testing
+- System Design
 
 ## Questions?
 
-Open an issue or reach out via [Discussions](https://github.com/muhittincamdali/mobile-interview-questions/discussions).
+Open an issue for discussion!

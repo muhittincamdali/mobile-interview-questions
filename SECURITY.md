@@ -1,37 +1,40 @@
 # Security Policy
 
-## Reporting a Vulnerability
+## Reporting Security Issues
 
-If you discover a security vulnerability in any code example or find that
-a recommended practice in this repository is insecure, please report it
-responsibly.
+If you find security concerns in this repository, please report them responsibly.
 
 ### How to Report
 
-1. **Do not** open a public issue
-2. Email the maintainer or use GitHub's private vulnerability reporting
-3. Include a description of the issue and steps to reproduce
+1. **DO NOT** create a public issue
+2. Use GitHub's private vulnerability reporting
+3. Or contact the maintainer directly
 
-### What to Expect
+### What to Report
 
-- Acknowledgment within 48 hours
-- A fix or update within 7 days for critical issues
-- Credit in the changelog (unless you prefer anonymity)
+- Code examples with security vulnerabilities
+- Answers that promote insecure practices
+- Links to malicious resources
+- Content that could compromise systems
 
-## Scope
+### Response Timeline
 
-This repository contains interview questions and answers. Security concerns
-typically involve:
+- **Acknowledgment**: Within 48 hours
+- **Assessment**: Within 5 days
+- **Update**: Remove or fix problematic content
 
-- Insecure code examples that could be copy-pasted into production
-- Outdated security practices recommended in answers
-- Exposed secrets or credentials in examples
+## Content Guidelines
 
-## Best Practices
+When contributing, ensure:
+- No credentials or sensitive data
+- Security best practices in examples
+- No harmful code patterns
+- Safe external links
 
-All code examples in this repository should follow security best practices:
+## Supported Versions
 
-- No hardcoded credentials or API keys
-- Proper input validation in examples
-- Secure networking practices (HTTPS, certificate pinning)
-- Safe data storage patterns (Keychain, encrypted storage)
+| Version | Supported          |
+| ------- | ------------------ |
+| Latest  | :white_check_mark: |
+
+Thank you for keeping interview prep safe!
