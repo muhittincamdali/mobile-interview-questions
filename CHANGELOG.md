@@ -8,21 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Comprehensive interview question bank
-- iOS and Android categories
-- Difficulty levels
-- Sample answers and explanations
+- visionOS navigation support
 
-### Changed
-- Updated for 2025 interview trends
-
-## [1.0.0] - 2025-01-01
+## [1.0.0] - 2024-01-15
 
 ### Added
-- Initial question collection
-- Categories by topic
-- Beginner to expert levels
-- Answer guidelines
+- Type-safe navigation with compile-time checks
+- SwiftUI NavigationStack integration
+- Deep linking support with URL parsing
+- Tab bar coordination
+- Modal presentation handling
+- Navigation state persistence
+- Route parameters with type safety
+- Navigation interceptors (guards)
+- Animated transitions
+- Back stack management
+- Child router support (coordinator pattern)
 
-[Unreleased]: https://github.com/muhittincamdali/mobile-interview-questions/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/muhittincamdali/mobile-interview-questions/releases/tag/v1.0.0
+### Features
+- Zero dependencies
+- Protocol-oriented design
+- Full async/await support
+
+[Unreleased]: https://github.com/muhittincamdali/SwiftRouter/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/muhittincamdali/SwiftRouter/releases/tag/v1.0.0

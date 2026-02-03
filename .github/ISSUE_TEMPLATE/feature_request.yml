@@ -1,76 +1,62 @@
 name: Feature Request
-description: Suggest new questions or improvements
+description: Suggest an idea for this project
 title: "[Feature]: "
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Have questions to add? We'd love to include them!
+        Thanks for suggesting a feature! Please fill out the information below.
 
   - type: textarea
-    id: description
+    id: problem
     attributes:
-      label: Description
-      description: What would you like to add?
-      placeholder: Describe your suggestion...
+      label: Problem Statement
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: A clear and concise description of what the problem is.
     validations:
       required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like
+      placeholder: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed API
+      description: If applicable, show how you envision the API
+      render: swift
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or features you've considered.
 
   - type: dropdown
     id: category
     attributes:
       label: Category
       options:
-        - New Question(s)
-        - New Category
-        - Better Answer
-        - Code Example
-        - Structure Improvement
+        - Navigation Pattern
+        - Deep Linking
+        - State Management
+        - Animation/Transition
+        - API Improvement
+        - Documentation
         - Other
     validations:
       required: true
-
-  - type: dropdown
-    id: platform
-    attributes:
-      label: Platform
-      options:
-        - iOS
-        - Android
-        - Cross-Platform
-        - General
-    validations:
-      required: true
-
-  - type: dropdown
-    id: level
-    attributes:
-      label: Difficulty Level
-      options:
-        - Junior
-        - Mid-Level
-        - Senior
-        - Lead/Principal
-        - All Levels
-    validations:
-      required: true
-
-  - type: textarea
-    id: questions
-    attributes:
-      label: Proposed Questions
-      description: If adding questions, list them
-      placeholder: |
-        1. Question about X
-        2. Question about Y
-    validations:
-      required: false
 
   - type: checkboxes
     id: contribution
     attributes:
       label: Contribution
       options:
-        - label: I can help write answers
-          required: false
+        - label: I would be willing to submit a PR for this feature
