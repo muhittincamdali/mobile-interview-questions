@@ -25,7 +25,7 @@
 
 ---
 
-## Contents
+## 📋 Table of Contents
 
 - [iOS & Swift](#ios--swift)
   - [Swift Fundamentals](#swift-fundamentals)
@@ -41,6 +41,9 @@
 - [System Design](#system-design)
 - [Behavioral](#behavioral)
 - [Coding Challenges](#coding-challenges)
+- [Contributing](#contributing)
+- [License](#license)
+- [Star History](#-star-history)
 
 ---
 
