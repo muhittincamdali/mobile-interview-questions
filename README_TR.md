@@ -2,7 +2,7 @@
 
 [![EN](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
 
-> 1000+ iOS, Flutter ve React Native mülakat sorusu ve detaylı cevapları
+> 250 iOS, Flutter ve React Native mülakat sorusu ve detaylı cevapları
 
 ## 📋 İçerik
 
