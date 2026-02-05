@@ -5,13 +5,13 @@
 <h1 align="center">Mobile Interview Questions</h1>
 
 <p align="center">
-  <strong>🎯 1000+ Mobile developer interview questions & answers for iOS, Flutter & React Native</strong>
+  <strong>🎯 250 Mobile developer interview questions & answers for iOS, Flutter & React Native</strong>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/github/stars/muhittincamdali/mobile-interview-questions?style=flat-square" alt="Stars"/>
   <img src="https://img.shields.io/github/forks/muhittincamdali/mobile-interview-questions?style=flat-square" alt="Forks"/>
-  <img src="https://img.shields.io/badge/questions-1000+-blue?style=flat-square" alt="Questions"/>
+  <img src="https://img.shields.io/badge/questions-250-blue?style=flat-square" alt="Questions"/>
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"/>
 </p>
 
