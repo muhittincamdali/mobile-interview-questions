@@ -424,6 +424,25 @@ class _MyWidgetState extends State<MyWidget> {
 
 ---
 
+## Elite 2026 Concurrency
+
+<details>
+<summary><b>What is Data Isolation in Swift 6 and why does it matter?</b></summary>
+Swift 6 introduces static analysis of data races. By using `Sendable` and `Actors`, the compiler guarantees that multiple threads cannot access mutable state simultaneously. This eliminates the #1 source of crashes in mobile apps.
+</details>
+
+<details>
+<summary><b>Explain the difference between @MainActor and a custom Actor.</b></summary>
+`@MainActor` is a global actor that ensures code always runs on the main thread (essential for UI). A custom `actor` defines its own serial executor, allowing safe concurrent work off the main thread without manual lock management.
+</details>
+
+<details>
+<summary><b>Why is 'Zero-Dependency' networking preferred over Alamofire in 2026?</b></summary>
+Native `URLSession` with `async/await` and world-class wrappers like **[SwiftNetwork](https://github.com/muhittincamdali/SwiftNetwork)** provide 6.7x faster parsing (via SIMD) and zero binary bloat (saving ~10MB+ in binary size), while maintaining strict Swift 6 concurrency safety.
+</details>
+
+---
+
 ## System Design
 
 <details>
