@@ -74,10 +74,9 @@ struct InterviewToolTests {
     }
 
     /// Every row was padded to the longest cell of its column, so one long `# ` heading made each
-    /// listed question as wide as that heading: 500 questions per file under a 500 KB heading
-    /// printed gigabytes. Columns are now padded to at most 40 characters.
+    /// listed question as wide as that heading. Columns are now padded to at most 40 characters.
     @Test func padsListColumnsToAtMostFortyCharacters() throws {
-        let topic = String(repeating: "T", count: 200)
+        let topic = String(repeating: "T", count: 60)
         let fixture = try Fixture(extra: [
             "questions/flutter/long.md": "# \(topic)\n\n## FLT-002: Long?\n\n**Level:** mid\n\nAn answer.\n\n**Reference:** [Key](https://api.flutter.dev/)\n",
         ])
@@ -91,6 +90,19 @@ struct InterviewToolTests {
             2 questions
 
             """)
+    }
+
+    /// The topic is printed on every row, so a 1 MiB file of 500 questions under a heading of
+    /// about 1 MB listed 504 MB. The parser keeps the first 100 characters of a heading.
+    @Test func listsAMegabyteHeadingAsAHundredCharacterTopic() throws {
+        let questions = (2...500).map { String(format: "## FLT-%03d: Q?\n\n**Level:** mid\n\nA.\n\n**Reference:** [K](https://api.flutter.dev/)\n", $0) }
+        let heading = "# " + String(repeating: "T", count: 1_000_000) + "\n\n"
+        let fixture = try Fixture(extra: ["questions/flutter/long.md": heading + questions.joined(separator: "\n")])
+        let output = fixture.run(["list", "--track", "flutter"])
+        let topic = String(repeating: "T", count: 100)
+        #expect(output.status == 0)
+        #expect(output.standardOutput.hasPrefix("FLT-002  mid  \(topic)  Q?\n"))
+        #expect(output.standardOutput.utf8.count < 100_000, "500 rows of about 120 bytes")
     }
 
     @Test func listFailsWhenNothingMatches() throws {

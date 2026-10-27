@@ -106,6 +106,15 @@ struct QuestionParserTests {
         #expect(parsed.diagnostics.map(\.location.line) == [1, 7])
     }
 
+    @Test func cutsALongTopicAndReportsIt() {
+        let heading = String(repeating: "T", count: QuestionParser.maximumTopicLength + 1)
+        let parsed = QuestionParser.parse("# \(heading)\n\n## IOS-001: Q?\n\n**Level:** mid\n\nA.", track: .ios, file: "f.md")
+        #expect(parsed.topic == String(heading.dropLast()))
+        #expect(parsed.questions.first?.topic == parsed.topic)
+        #expect(parsed.diagnostics.map(\.message) == ["the `# ` heading is longer than 100 characters; the topic was cut"])
+        #expect(parsed.diagnostics.map(\.location.line) == [1])
+    }
+
     @Test func reportsAnUnclosedCodeBlockButKeepsTheQuestion() {
         let parsed = QuestionParser.parse("# T\n\n## IOS-003: Q?\n\n**Level:** mid\n\n```swift\nlet x = 1\n## IOS-004: hidden?", track: .ios, file: "f.md")
         #expect(parsed.questions.map(\.id) == ["IOS-003"], "a heading inside the open block is code")

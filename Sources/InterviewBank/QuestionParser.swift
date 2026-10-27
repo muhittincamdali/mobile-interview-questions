@@ -27,6 +27,10 @@ public enum QuestionParser {
     static let verifiedPrefix = "**Verified by:** "
     static let referencePrefixes = ["**Reference:** ", "**References:** "]
     static let separator = " · "
+    /// Longest topic kept from a `# ` heading. The topic is printed with every question of the
+    /// file, so an unbounded heading multiplied the output of `interview list` by up to 500
+    /// questions; the longest topic in the bank has 29 characters.
+    public static let maximumTopicLength = 100
 
     public static func parse(
         _ text: String,
@@ -58,7 +62,11 @@ public enum QuestionParser {
             }
             if line.hasPrefix("# ") {
                 if parsed.topic == nil && current == nil && parsed.questions.isEmpty {
-                    parsed.topic = line.dropFirst(2).trimmingSpaces()
+                    let topic = line.dropFirst(2).trimmingSpaces()
+                    if topic.count > maximumTopicLength {
+                        log.append(Diagnostic("the `# ` heading is longer than \(maximumTopicLength) characters; the topic was cut", at: location))
+                    }
+                    parsed.topic = String(topic.prefix(maximumTopicLength))
                 } else {
                     log.append(Diagnostic("only one `# ` heading is allowed, before the first question", at: location))
                 }
