@@ -150,6 +150,24 @@ struct AnswerBlockTests {
         #expect(AnswerBlock.split("````md\n```swift\nx\n```\n````") == [.code(language: "md", source: "```swift\nx\n```")])
     }
 
+    @Test func readsPipeTablesWithAlignmentAndPaddingRows() {
+        let blocks = AnswerBlock.split("Before.\n\n| Tool | Use |\n| :--- | ---: |\n| `a \\| b` | x |\n| c |\n\nAfter.")
+        #expect(blocks == [
+            .text("Before."),
+            .table(header: ["Tool", "Use"], rows: [["`a | b`", "x"], ["c", ""]]),
+            .text("After."),
+        ])
+    }
+
+    @Test func keepsBackslashesThatDoNotEscapeAPipe() {
+        #expect(AnswerBlock.cells("| a\\*b | c\\ |") == ["a\\*b", "c\\"])
+    }
+
+    @Test func keepsPipesWithoutASeparatorRowAsProse() {
+        #expect(AnswerBlock.split("| not | a table |\nnext line") == [.text("| not | a table |\nnext line")])
+        #expect(AnswerBlock.split("| a | b |\n| --- |") == [.text("| a | b |\n| --- |")], "column counts must match")
+    }
+
     @Test func dropsBlankProse() {
         #expect(AnswerBlock.split("\n\n   \n").isEmpty)
     }
