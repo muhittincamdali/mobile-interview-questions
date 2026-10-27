@@ -352,7 +352,7 @@ and `Int8(exactly: 300)` gives `nil`. A typical review comment is a progress val
 percentage with `Int(progress * 100)` where `progress` came from `bytesSent / totalBytes` and
 `totalBytes` can be zero.
 
-**Reference:** [Int.init(exactly:)](<https://developer.apple.com/documentation/swift/int/init(exactly:)-63925>)
+**Reference:** [Int.init(exactly:)](<https://developer.apple.com/documentation/swift/int/init(exactly:)-77kq8>)
 
 ## IOS-013: What is the difference between a `lazy var` and a lazy sequence?
 

@@ -135,7 +135,7 @@ The work is cancelled, not stopped: the code inside must react to cancellation (
 `.onDisappear` is the place for synchronous cleanup; `.task` cleanup can go after the `await` that
 throws `CancellationError`.
 
-**Reference:** [task(id:priority:_:)](<https://developer.apple.com/documentation/swiftui/view/task(id:priority:_:)>)
+**Reference:** [task(id:name:priority:file:line:_:)](<https://developer.apple.com/documentation/swiftui/view/task(id:name:priority:file:line:_:)>)
 
 ## IOS-038: How do you build programmatic navigation and deep links with `NavigationStack`?
 
