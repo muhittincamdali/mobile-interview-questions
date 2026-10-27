@@ -4,7 +4,8 @@ import Foundation
 public struct BankLimits: Sendable, Equatable {
     /// Largest question file that is read, in bytes.
     public var maxFileBytes: Int
-    /// Most Markdown files read from the folder.
+    /// Most Markdown files read from the folder. Links and folders that are skipped with a
+    /// diagnostic count too, so the number of diagnostics they add is bounded as well.
     public var maxFiles: Int
     /// Most questions read from one file.
     public var maxQuestionsPerFile: Int
@@ -47,7 +48,7 @@ public struct QuestionBank: Sendable {
     ///
     /// Files are read in name order so that the bank, and a seeded quiz, are the same on every
     /// machine. Symbolic links, files over ``BankLimits/maxFileBytes`` and folders that are not
-    /// a track are reported and skipped.
+    /// a track are reported and skipped; each of them counts against ``BankLimits/maxFiles``.
     public static func load(from folder: URL, limits: BankLimits = .default) throws -> QuestionBank {
         let manager = FileManager.default
         var isDirectory: ObjCBool = false
@@ -55,30 +56,37 @@ public struct QuestionBank: Sendable {
             throw BankError.folderNotFound(folder.path)
         }
         var bank = QuestionBank(questions: [])
-        var filesRead = 0
+        var entriesUsed = 0
         let keys: [URLResourceKey] = [.isDirectoryKey, .isSymbolicLinkKey, .fileSizeKey]
+
+        /// `false`, after reporting it once, when the folder has more entries than the limit.
+        func useEntry(at location: SourceLocation) -> Bool {
+            guard entriesUsed < limits.maxFiles else {
+                bank.diagnostics.append(Diagnostic("more than \(limits.maxFiles) question files (counting skipped links and folders); the rest were not read", at: location))
+                return false
+            }
+            entriesUsed += 1
+            return true
+        }
 
         for entry in try sortedContents(of: folder, keys: keys) {
             let values = try entry.resourceValues(forKeys: Set(keys))
             let name = entry.lastPathComponent
             guard values.isDirectory == true else { continue }
             guard values.isSymbolicLink != true, let track = Track(rawValue: name) else {
+                guard useEntry(at: SourceLocation(file: name, line: 0)) else { return bank }
                 bank.diagnostics.append(Diagnostic("`\(name)` is not a track folder (\(Track.allCases.map(\.rawValue).joined(separator: ", ")))", at: SourceLocation(file: name, line: 0)))
                 continue
             }
             for file in try sortedContents(of: entry, keys: keys) where file.pathExtension == "md" {
                 let relative = "\(name)/\(file.lastPathComponent)"
                 let location = SourceLocation(file: relative, line: 0)
+                guard useEntry(at: location) else { return bank }
                 let fileValues = try file.resourceValues(forKeys: Set(keys))
                 if fileValues.isSymbolicLink == true || fileValues.isDirectory == true {
                     bank.diagnostics.append(Diagnostic("skipped: question files must be regular files", at: location))
                     continue
                 }
-                guard filesRead < limits.maxFiles else {
-                    bank.diagnostics.append(Diagnostic("more than \(limits.maxFiles) question files; the rest were not read", at: location))
-                    return bank
-                }
-                filesRead += 1
                 guard let text = readText(at: file, limit: limits.maxFileBytes) else {
                     bank.diagnostics.append(Diagnostic("skipped: larger than \(limits.maxFileBytes) bytes or not UTF-8", at: location))
                     continue

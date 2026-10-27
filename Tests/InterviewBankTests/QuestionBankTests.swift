@@ -63,6 +63,25 @@ struct QuestionBankTests {
         #expect(bank.diagnostics.first?.message.contains("more than 2 question files") == true)
     }
 
+    @Test func countsSkippedLinksAndFoldersAgainstTheFileLimit() throws {
+        let folder = try TemporaryFolder()
+        let outside = try folder.write("outside.md", "# Outside\n\n" + TemporaryFolder.question("IOS-050"))
+        let ios = folder.url.appendingPathComponent("questions/ios")
+        try FileManager.default.createDirectory(at: ios, withIntermediateDirectories: true)
+        for number in 1...3 {
+            try FileManager.default.createSymbolicLink(at: ios.appendingPathComponent("link\(number).md"), withDestinationURL: outside)
+        }
+        for number in 1...20 {
+            try FileManager.default.createDirectory(at: folder.url.appendingPathComponent("questions/zz-not-a-track-\(number)"), withIntermediateDirectories: true)
+        }
+        let limits = BankLimits(maxFileBytes: 1 << 20, maxFiles: 5, maxQuestionsPerFile: 10)
+
+        let bank = try QuestionBank.load(from: folder.url.appendingPathComponent("questions"), limits: limits)
+
+        #expect(bank.diagnostics.map(\.location.file) == ["ios/link1.md", "ios/link2.md", "ios/link3.md", "zz-not-a-track-1", "zz-not-a-track-10", "zz-not-a-track-11"])
+        #expect(bank.diagnostics.last?.message.contains("more than 5 question files") == true)
+    }
+
     @Test func skipsSymbolicLinksAndInvalidText() throws {
         let folder = try TemporaryFolder()
         let outside = try folder.write("outside.md", "# Outside\n\n" + TemporaryFolder.question("IOS-050"))
