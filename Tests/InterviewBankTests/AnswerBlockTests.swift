@@ -31,6 +31,38 @@ struct AnswerBlockTests {
         ])
     }
 
+    /// Short rows are padded to the header width, so a wide header over many short rows once turned
+    /// 48 KB of text into 96 million cells and 1.6 GB of memory. The table is now kept as prose,
+    /// and the cells of the result stay within the size of the text.
+    @Test func keepsAWideTableOfShortRowsAsProse() {
+        let width = 2_000
+        let header = String(repeating: "| h ", count: width) + "|"
+        let separator = String(repeating: "|---", count: width) + "|"
+        let markdown = ([header, separator] + Array(repeating: "| x |", count: 3_000)).joined(separator: "\n")
+        var blocks: [AnswerBlock] = []
+        let elapsed = ContinuousClock().measure {
+            blocks = AnswerBlock.split(markdown)
+        }
+        let cells = blocks.reduce(0) { total, block in
+            guard case .table(let header, let rows) = block else { return total }
+            return total + header.count + rows.reduce(0) { $0 + $1.count }
+        }
+        #expect(cells <= markdown.utf8.count, "\(cells) cells from \(markdown.utf8.count) bytes")
+        #expect(blocks == [.text(markdown)])
+        #expect(elapsed < .seconds(2), "splitting took \(elapsed)")
+    }
+
+    /// Padding may add at most as many cells as the table writes: header, separator and rows.
+    @Test func padsShortRowsUpToTheCellsTheTableWrites() {
+        let table = "| a | b | c |\n|---|---|---|\n"
+        let sixRows = table + Array(repeating: "| x |", count: 6).joined(separator: "\n")
+        #expect(AnswerBlock.split(sixRows) == [
+            .table(header: ["a", "b", "c"], rows: Array(repeating: ["x", "", ""], count: 6)),
+        ], "6 written + 6 header and separator cells, 12 added")
+        let sevenRows = table + Array(repeating: "| x |", count: 7).joined(separator: "\n")
+        #expect(AnswerBlock.split(sevenRows) == [.text(sevenRows)], "7 + 6 written, 14 added")
+    }
+
     @Test func keepsBackslashesThatDoNotEscapeAPipe() {
         #expect(AnswerBlock.cells("| a\\*b | c\\ |") == ["a\\*b", "c\\"])
     }

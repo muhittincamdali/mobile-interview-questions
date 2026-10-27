@@ -5,11 +5,16 @@ public enum AnswerBlock: Hashable, Sendable {
     /// A fenced code block, with the language from its info string (`swift`, `kotlin`, …).
     case code(language: String?, source: String)
     /// A pipe table: the header cells and the body rows, with the `---` separator row removed.
-    /// Cells keep their inline Markdown.
+    /// Cells keep their inline Markdown, and every row has as many cells as the header: short rows
+    /// get empty cells and long rows are cut.
     case table(header: [String], rows: [[String]])
 
     /// Splits Markdown into prose, fenced code blocks and pipe tables, in order. Blank prose is
     /// dropped and an unclosed code block runs to the end of the text.
+    ///
+    /// Padding short table rows may add at most as many empty cells as the table writes; a table
+    /// that needs more, such as a wide header over many one-cell rows, stays prose. The result so
+    /// grows linearly with the text.
     public static func split(_ markdown: String) -> [AnswerBlock] {
         var blocks: [AnswerBlock] = []
         var prose: [Substring] = []
@@ -72,7 +77,9 @@ public enum AnswerBlock: Hashable, Sendable {
         return blocks
     }
 
-    /// A table needs a header row and a separator row of dashes; anything else stays prose.
+    /// A table needs a header row and a separator row of dashes; anything else stays prose. A table
+    /// whose short rows need more empty cells than the header, separator and rows write also stays
+    /// prose, so the cells of a result never outnumber twice the cells of its text.
     static func table(from lines: [Substring]) -> AnswerBlock? {
         guard lines.count >= 2 else { return nil }
         let rows = lines.map(cells)
@@ -83,7 +90,14 @@ public enum AnswerBlock: Hashable, Sendable {
         }
         guard isSeparator, rows[0].count == separator.count else { return nil }
         let width = rows[0].count
-        let body = rows.dropFirst(2).map { row in
+        let bodyRows = rows.dropFirst(2)
+        // Padding is the only part of a table that the text does not contain, so it alone can make
+        // the result outgrow the text: a wide header over many short rows asked for millions of
+        // empty cells. Allowing no more added cells than written ones keeps the result linear.
+        let written = 2 * width + bodyRows.reduce(0) { $0 + min($1.count, width) }
+        let added = bodyRows.reduce(0) { $0 + max(0, width - $1.count) }
+        guard added <= written else { return nil }
+        let body = bodyRows.map { row in
             Array((row + Array(repeating: "", count: max(0, width - row.count))).prefix(width))
         }
         return .table(header: rows[0], rows: Array(body))

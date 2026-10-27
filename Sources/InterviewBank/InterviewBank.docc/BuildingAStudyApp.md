@@ -71,6 +71,11 @@ ForEach(Array(AnswerBlock.split(question.answer).enumerated()), id: \.offset) { 
 }
 ```
 
+Every table row has as many cells as the header, so a grid can index rows by header column. Short
+rows get empty cells, but no more than the table writes itself: a table that would need more, such
+as a wide header over many one-cell rows, comes back as prose, and the result of
+``AnswerBlock/split(_:)`` stays proportional to the answer.
+
 The question files wrap lines at about 100 columns. ``AnswerBlock/joiningSoftLineBreaks(_:)`` joins
 them back into paragraphs while keeping list items on their own lines, which matters when you parse
 the prose with `AttributedString(markdown:options:)` and `.inlineOnlyPreservingWhitespace`.
