@@ -1,0 +1,7 @@
+version: 1
+builder:
+  configs:
+    - platform: ios
+      scheme: InterviewBank
+      documentation_targets: [InterviewBank]
+    - platform: macos-spm
