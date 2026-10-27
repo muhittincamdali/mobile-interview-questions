@@ -24,7 +24,8 @@ public struct BankLinter: Sendable {
     public func lint(_ bank: QuestionBank) -> [Diagnostic] {
         var diagnostics = bank.diagnostics
         var firstUse: [String: SourceLocation] = [:]
-        var testFiles: [String: String?] = [:]
+        // The question IDs each linked test file names, read and scanned once per file.
+        var testFiles: [String: Set<String>?] = [:]
 
         for question in bank.questions {
             let location = question.location
@@ -60,7 +61,7 @@ public struct BankLinter: Sendable {
     }
 
     /// `nil` when the link resolves inside the repository to a file that names the question.
-    private func checkVerification(of question: Question, target: String, cache: inout [String: String?]) -> String? {
+    private func checkVerification(of question: Question, target: String, cache: inout [String: Set<String>?]) -> String? {
         if target.contains("://") || target.hasPrefix("/") {
             return "\(question.id): **Verified by** must be a relative path to a test file"
         }
@@ -72,30 +73,45 @@ public struct BankLinter: Sendable {
         }
         let key = resolved.path
         if cache[key] == nil {
-            cache[key] = .some(QuestionBank.readText(at: resolved, limit: limits.maxFileBytes))
+            cache[key] = .some(QuestionBank.readText(at: resolved, limit: limits.maxFileBytes).map(Self.questionIDs))
         }
-        guard let text = cache[key] ?? nil else {
+        guard let namedIDs = cache[key] ?? nil else {
             return "\(question.id): **Verified by** file `\(target)` does not exist or cannot be read"
         }
-        guard Self.mentions(text, id: question.id) else {
+        guard namedIDs.contains(question.id) else {
             return "\(question.id): `\(target)` has no test named after \(question.id)"
         }
         return nil
     }
 
-    /// True when `id` appears as a whole word, so `IOS-001` does not match `IOS-0012`.
-    static func mentions(_ text: String, id: String) -> Bool {
-        var searchRange = text.startIndex..<text.endIndex
-        while let found = text.range(of: id, range: searchRange) {
-            let before = found.lowerBound == text.startIndex ? nil : text[text.index(before: found.lowerBound)]
-            let after = found.upperBound == text.endIndex ? nil : text[found.upperBound]
-            let isBoundary: (Character?) -> Bool = { character in
-                guard let character else { return true }
-                return !(character.isLetter || character.isNumber || character == "-")
+    /// The question IDs that appear as whole words in `text`, so `IOS-001` is found in
+    /// `@Test("IOS-001: …")` but not in `IOS-0012` or `XIOS-001`.
+    ///
+    /// Many questions can link the same test file, so the file is scanned once and each question
+    /// is a set lookup; searching the text again for every question made the time grow with
+    /// questions times file size.
+    static func questionIDs(in text: String) -> Set<String> {
+        let isWordCharacter: (Character) -> Bool = { $0.isLetter || $0.isNumber || $0 == "-" }
+        var ids = Set<String>()
+        var wordStart: String.Index?
+        for index in text.indices {
+            if isWordCharacter(text[index]) {
+                if wordStart == nil { wordStart = index }
+            } else if let start = wordStart {
+                insertIfID(text[start..<index], into: &ids)
+                wordStart = nil
             }
-            if isBoundary(before) && isBoundary(after) { return true }
-            searchRange = found.upperBound..<text.endIndex
         }
-        return false
+        if let start = wordStart {
+            insertIfID(text[start...], into: &ids)
+        }
+        return ids
+    }
+
+    private static func insertIfID(_ word: Substring, into ids: inout Set<String>) {
+        // The longest ID is eight characters (`ABCD-123`); skipping longer words keeps a long run
+        // of letters from being split and checked.
+        guard word.utf8.count <= 8, QuestionParser.isValidID(word) else { return }
+        ids.insert(String(word))
     }
 }

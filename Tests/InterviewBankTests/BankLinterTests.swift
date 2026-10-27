@@ -73,9 +73,28 @@ struct BankLinterTests {
     }
 
     @Test func matchesIDsOnlyAsWholeWords() {
-        #expect(BankLinter.mentions("@Test(\"IOS-001: x\")", id: "IOS-001"))
-        #expect(BankLinter.mentions("IOS-001", id: "IOS-001"))
-        #expect(!BankLinter.mentions("IOS-0011 XIOS-001 IOS-001-b", id: "IOS-001"))
-        #expect(BankLinter.mentions("IOS-0011 then (IOS-001)", id: "IOS-001"))
+        #expect(BankLinter.questionIDs(in: "@Test(\"IOS-001: x\")") == ["IOS-001"])
+        #expect(BankLinter.questionIDs(in: "IOS-001") == ["IOS-001"])
+        #expect(!BankLinter.questionIDs(in: "IOS-0011 XIOS-001 IOS-001-b -IOS-001 IOS-001x").contains("IOS-001"))
+        #expect(BankLinter.questionIDs(in: "IOS-0011 then (IOS-001), test_FLT-002_case") == ["IOS-001", "FLT-002"])
+    }
+
+    /// Before the IDs were collected once per file, 1000 questions linking a 1 MiB test file took
+    /// about 14 seconds in a release build, because the file was searched again for each question.
+    @Test func scansALinkedTestFileOncePerFile() throws {
+        let filler = String(repeating: "// padding line without question IDs\n", count: 27_000)
+        let ids = (0..<1000).map { String(format: "IOS-%03d", $0) }
+        var files = ["Tests/Big.swift": filler + ids.map { "@Test(\"\($0)\") func t() {}" }.joined(separator: "\n")]
+        for (half, slice) in [ids[..<500], ids[500...]].enumerated() {
+            let meta = " · **Verified by:** [T](../../Tests/Big.swift)"
+            files["questions/ios/\(half).md"] = "# T\n\n" + slice.map { TemporaryFolder.question($0, meta: meta) }.joined(separator: "\n")
+        }
+        #expect(files["Tests/Big.swift"]!.utf8.count < BankLimits.default.maxFileBytes)
+
+        let clock = ContinuousClock()
+        var diagnostics: [Diagnostic] = []
+        let elapsed = try clock.measure { diagnostics = try lint(files) }
+        #expect(diagnostics.isEmpty)
+        #expect(elapsed < .seconds(5), "lint took \(elapsed)")
     }
 }
