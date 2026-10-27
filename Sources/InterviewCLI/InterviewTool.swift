@@ -44,15 +44,31 @@ public struct InterviewTool: Sendable {
           swift run interview show IOS-012
         """
 
+    /// Runs the command and returns everything it printed.
     public func run(_ arguments: [String]) -> ToolOutput {
+        var output = ""
+        var errors = ""
+        let status = run(arguments, output: &output, errors: &errors)
+        return ToolOutput(status: status, standardOutput: output, standardError: errors)
+    }
+
+    /// Runs the command and writes each line to `output` or `errors` as soon as it is made, so a
+    /// long listing is not held in memory before it is printed. Returns the exit status.
+    public func run<Output: TextOutputStream, Errors: TextOutputStream>(
+        _ arguments: [String],
+        output: inout Output,
+        errors: inout Errors
+    ) -> Int32 {
         let parsed: Arguments
         do {
             parsed = try Arguments.parse(arguments)
         } catch {
-            return ToolOutput(status: 2, standardOutput: "", standardError: "error: \(error.message)\n\nRun `interview --help` for usage.\n")
+            errors.write("error: \(error.message)\n\nRun `interview --help` for usage.\n")
+            return 2
         }
         if parsed.command == .help {
-            return ToolOutput(status: 0, standardOutput: Self.usage + "\n", standardError: "")
+            output.write(Self.usage + "\n")
+            return 0
         }
         let folder = parsed.bank.map { URL(fileURLWithPath: $0, relativeTo: currentDirectory) }
             ?? currentDirectory.appendingPathComponent("questions")
@@ -60,14 +76,17 @@ public struct InterviewTool: Sendable {
         do {
             bank = try QuestionBank.load(from: folder.standardizedFileURL)
         } catch {
-            return ToolOutput(status: 2, standardOutput: "", standardError: "error: \(error)\n")
+            errors.write("error: \(error)\n")
+            return 2
         }
-        var printer = Printer()
+        var printer = Printer(output: output, errors: errors)
         let status = execute(parsed, bank: bank, folder: folder.standardizedFileURL, printer: &printer)
-        return ToolOutput(status: status, standardOutput: printer.output, standardError: printer.errors)
+        output = printer.output
+        errors = printer.errors
+        return status
     }
 
-    private func execute(_ arguments: Arguments, bank: QuestionBank, folder: URL, printer: inout Printer) -> Int32 {
+    private func execute(_ arguments: Arguments, bank: QuestionBank, folder: URL, printer: inout Printer<some TextOutputStream, some TextOutputStream>) -> Int32 {
         switch arguments.command {
         case .list:
             let questions = bank.filter(arguments.filter)
@@ -100,7 +119,7 @@ public struct InterviewTool: Sendable {
         }
     }
 
-    private func quiz(_ arguments: Arguments, bank: QuestionBank, folder: URL, printer: inout Printer) -> Int32 {
+    private func quiz(_ arguments: Arguments, bank: QuestionBank, folder: URL, printer: inout Printer<some TextOutputStream, some TextOutputStream>) -> Int32 {
         let pool = bank.filter(arguments.filter)
         guard !pool.isEmpty else {
             printer.error("No questions match these filters.")
@@ -141,20 +160,20 @@ public struct InterviewTool: Sendable {
     }
 }
 
-/// Collects the text a command prints.
+/// Writes the text a command prints, line by line.
 ///
 /// Question files can come from any folder passed with `--bank`, so everything is printed through
 /// ``terminalSafe(_:)``: an escape sequence in a title or an answer must not reach the terminal.
-struct Printer {
-    private(set) var output = ""
-    private(set) var errors = ""
+struct Printer<Output: TextOutputStream, Errors: TextOutputStream> {
+    var output: Output
+    var errors: Errors
 
     mutating func line(_ text: String) {
-        output += Self.terminalSafe(text) + "\n"
+        output.write(Self.terminalSafe(text) + "\n")
     }
 
     mutating func error(_ text: String) {
-        errors += Self.terminalSafe(text) + "\n"
+        errors.write(Self.terminalSafe(text) + "\n")
     }
 
     /// Removes control characters (C0, DEL and C1, which include ESC and CSI) except line feed and
@@ -175,7 +194,7 @@ struct Printer {
     /// Columns are padded to this width at most; a longer cell prints in full and shifts its row.
     /// Padding to the longest cell made one long `# ` heading widen every listed question, so the
     /// output grew with headings times questions.
-    static let maximumColumnWidth = 40
+    static var maximumColumnWidth: Int { 40 }
 
     /// Left-aligned columns; the last column is not padded.
     mutating func table(_ rows: [[String]]) {

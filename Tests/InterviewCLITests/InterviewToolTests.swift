@@ -105,6 +105,38 @@ struct InterviewToolTests {
         #expect(output.standardOutput.utf8.count < 100_000, "500 rows of about 120 bytes")
     }
 
+    /// The size of each write, to see that a listing is written line by line.
+    struct WriteSizes: TextOutputStream {
+        var sizes: [Int] = []
+        mutating func write(_ string: String) { sizes.append(string.utf8.count) }
+    }
+
+    /// The output used to be collected into one string and written when the command ended.
+    @Test func writesEachLineOfAListingAsItIsMade() throws {
+        let fixture = try Fixture()
+        var output = WriteSizes()
+        var errors = ""
+        let status = fixture.tool.run(["list"], output: &output, errors: &errors)
+        #expect(status == 0)
+        #expect(output.sizes.count == 4, "three rows, then a blank line with the count")
+        #expect(output.sizes.allSatisfy { $0 < 80 })
+        #expect(errors.isEmpty)
+    }
+
+    @Test func fileStreamWritesFullBlocksAndTheRestOnFlush() throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("FileStream-\(UUID().uuidString)")
+        FileManager.default.createFile(atPath: url.path, contents: nil)
+        defer { try? FileManager.default.removeItem(at: url) }
+        let handle = try FileHandle(forWritingTo: url)
+        var stream = FileStream(handle)
+        let line = String(repeating: "x", count: 1023) + "\n"
+        for _ in 0..<70 { stream.write(line) }
+        #expect(try Data(contentsOf: url).count == 64 * 1024, "one full block is written")
+        stream.flush()
+        try handle.close()
+        #expect(try Data(contentsOf: url).count == 70 * 1024)
+    }
+
     @Test func listFailsWhenNothingMatches() throws {
         let output = try Fixture().run(["list", "--track", "android"])
         #expect(output.status == 1)
