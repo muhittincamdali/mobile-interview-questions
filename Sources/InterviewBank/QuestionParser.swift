@@ -183,8 +183,16 @@ private struct QuestionDraft {
             }
             answerLines.append(text)
         }
-        while answerLines.first?.trimmingSpaces().isEmpty == true { answerLines.removeFirst() }
-        while answerLines.last?.trimmingSpaces().isEmpty == true { answerLines.removeLast() }
+        // Slicing instead of `removeFirst()` in a loop: one question followed by a megabyte of
+        // blank lines would otherwise shift the array once per line.
+        let isBlank: (Substring) -> Bool = { $0.allSatisfy(\.isWhitespace) }
+        let answer: String
+        if let first = answerLines.firstIndex(where: { !isBlank($0) }),
+           let last = answerLines.lastIndex(where: { !isBlank($0) }) {
+            answer = answerLines[first...last].joined(separator: "\n")
+        } else {
+            answer = ""
+        }
 
         return Question(
             id: id,
@@ -192,7 +200,7 @@ private struct QuestionDraft {
             topic: topic,
             title: title,
             level: level,
-            answer: answerLines.joined(separator: "\n"),
+            answer: answer,
             references: references,
             verifiedBy: verifiedBy,
             location: headingLocation

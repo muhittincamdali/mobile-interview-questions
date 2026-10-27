@@ -134,6 +134,20 @@ struct QuestionParserTests {
         #expect(parsed.diagnostics.first?.message.contains("more than 3 questions") == true)
     }
 
+    /// A file at the 1 MiB limit that is almost all blank lines. Trimming them one
+    /// `removeFirst()` at a time took minutes; slicing reads the file in well under a second.
+    @Test func trimsAMegabyteOfBlankLinesInLinearTime() {
+        let blankLines = String(repeating: "\n", count: 1 << 19)
+        let text = "# T\n\n## IOS-007: Q?\n\n**Level:** mid\n" + blankLines + "A.\nB." + blankLines
+        let clock = ContinuousClock()
+        var parsed: ParsedFile?
+        let elapsed = clock.measure {
+            parsed = QuestionParser.parse(text, track: .ios, file: "f.md")
+        }
+        #expect(parsed?.questions.first?.answer == "A.\nB.")
+        #expect(elapsed < .seconds(10), "parsing took \(elapsed)")
+    }
+
     @Test func readsAnEmptyFileAsEmpty() {
         let parsed = QuestionParser.parse("", track: .ios, file: "f.md")
         #expect(parsed.topic == nil)
