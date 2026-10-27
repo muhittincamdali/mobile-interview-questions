@@ -102,7 +102,7 @@ warns when a known case is missing. `indirect` allows recursive cases such as a 
 
 ## IOS-004: A method is implemented in a protocol extension and in a conforming type. Which one runs?
 
-**Level:** mid · **Verified by:** [SwiftLanguageTests](../../Tests/AnswerTests/SwiftLanguageTests.swift)
+**Level:** mid · **Verified by:** [SwiftTypeSystemTests](../../Tests/AnswerTests/SwiftTypeSystemTests.swift)
 
 It depends on whether the method is a **requirement** of the protocol.
 
@@ -133,7 +133,7 @@ The fix is to add `wave()` to the protocol if conforming types are meant to cust
 
 ## IOS-005: What is the difference between `some` and `any`?
 
-**Level:** mid · **Verified by:** [SwiftLanguageTests](../../Tests/AnswerTests/SwiftLanguageTests.swift)
+**Level:** mid · **Verified by:** [SwiftTypeSystemTests](../../Tests/AnswerTests/SwiftTypeSystemTests.swift)
 
 - `some Shape` is an **opaque type**: there is exactly one concrete type, chosen by the
   implementation and hidden from the caller. The compiler knows it, so calls are statically
@@ -156,7 +156,7 @@ an existential must be spelled with `any`.
 
 ## IOS-006: What are associated types and primary associated types?
 
-**Level:** senior · **Verified by:** [SwiftLanguageTests](../../Tests/AnswerTests/SwiftLanguageTests.swift)
+**Level:** senior · **Verified by:** [SwiftTypeSystemTests](../../Tests/AnswerTests/SwiftTypeSystemTests.swift)
 
 An associated type is a placeholder inside a protocol that each conforming type fills in, such as
 `Element` in `Collection`. It lets one protocol describe containers of any element type without
@@ -183,7 +183,7 @@ Before this you had to write `func sum<C: Collection>(of values: C) -> Int where
 
 ## IOS-007: What are typed throws, and when should you use them?
 
-**Level:** mid · **Verified by:** [SwiftLanguageTests](../../Tests/AnswerTests/SwiftLanguageTests.swift)
+**Level:** mid · **Verified by:** [SwiftTypeSystemTests](../../Tests/AnswerTests/SwiftTypeSystemTests.swift)
 
 Since Swift 6.0 a function can declare the one error type it throws (SE-0413):
 
@@ -210,7 +210,7 @@ error is a promise that adding a new failure, such as a network error, is a brea
 
 ## IOS-008: What is a noncopyable type (`~Copyable`), and what problem does it solve?
 
-**Level:** senior · **Verified by:** [SwiftLanguageTests](../../Tests/AnswerTests/SwiftLanguageTests.swift)
+**Level:** senior · **Verified by:** [SwiftTypeSystemTests](../../Tests/AnswerTests/SwiftTypeSystemTests.swift)
 
 `struct FileToken: ~Copyable` is a value type that cannot be copied, so there is always exactly
 one owner. The compiler enforces it: passing the value either **borrows** it (read-only, the
@@ -241,7 +241,7 @@ and `Atomic`, and `Optional` and `Result` accept noncopyable payloads since Swif
 
 ## IOS-009: How does a property wrapper work, and what is its projected value?
 
-**Level:** mid · **Verified by:** [SwiftLanguageTests](../../Tests/AnswerTests/SwiftLanguageTests.swift)
+**Level:** mid · **Verified by:** [SwiftTypeSystemTests](../../Tests/AnswerTests/SwiftTypeSystemTests.swift)
 
 A property wrapper is a type marked `@propertyWrapper` with a `wrappedValue`. Writing
 `@Clamped(0...100) var volume = 50` makes the compiler store a `Clamped` instance and route reads
@@ -272,7 +272,7 @@ state in a class is shared between copies of the enclosing struct, which can sur
 
 ## IOS-010: What is a result builder?
 
-**Level:** senior · **Verified by:** [SwiftLanguageTests](../../Tests/AnswerTests/SwiftLanguageTests.swift)
+**Level:** senior · **Verified by:** [SwiftTypeSystemTests](../../Tests/AnswerTests/SwiftTypeSystemTests.swift)
 
 A result builder is a type marked `@resultBuilder` whose static methods tell the compiler how to
 combine the statements of a closure into one value. SwiftUI's `@ViewBuilder` is the best-known
