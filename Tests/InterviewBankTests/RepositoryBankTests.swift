@@ -50,4 +50,13 @@ struct RepositoryBankTests {
             #expect(listed[file]?.count == String(questions.count), "\(file) has \(questions.count) questions")
         }
     }
+
+    /// The README states the number of questions and verified answers; keep it honest.
+    @Test func theReadmeCountsMatchTheBank() throws {
+        let bank = try QuestionBank.load(from: Self.questions)
+        let readme = try String(contentsOf: Self.root.appendingPathComponent("README.md"), encoding: .utf8)
+        let verified = bank.questions.count { $0.verifiedBy != nil }
+        #expect(readme.contains("\(bank.questions.count) questions"), "README.md should say \(bank.questions.count) questions")
+        #expect(readme.contains("\(verified) answers"), "README.md should say \(verified) answers")
+    }
 }
