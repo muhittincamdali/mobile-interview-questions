@@ -12,7 +12,7 @@ a ``Track``: `ios`, `android`, `flutter`, `react-native`, `system-design` or `be
 
 ## IOS-026: What is actor reentrancy, and what bug does it cause?
 
-**Level:** senior · **Verified by:** [ConcurrencyTests](../../Tests/AnswerTests/ConcurrencyTests.swift)
+**Level:** senior
 
 While an actor method is suspended at an `await`, the actor is free to run other calls...
 
@@ -26,7 +26,8 @@ While an actor method is suspended at an `await`, the actor is free to run other
 - Each `## ` heading starts a question: an ID, a colon, and the question. The ID is two to four
   capital letters, a hyphen and three digits.
 - The first non-empty line after the heading is the level line. ``Level`` is `junior`, `mid` or
-  `senior`. It may be followed by `· **Verified by:**` and one link.
+  `senior`. It may be followed by one link to the test that checks the answer, relative to the
+  question file: `**Level:** senior · **Verified by:** [ConcurrencyTests](../../Tests/AnswerTests/ConcurrencyTests.swift)`.
 - Lines that start with `**Reference:**` or `**References:**` are collected as
   ``Question/references``; everything else is the ``Question/answer``.
 - Inside fenced code blocks (three or more backticks or tildes) nothing is a heading or a reference
