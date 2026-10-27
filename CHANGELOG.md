@@ -25,6 +25,9 @@ The question collection is rewritten as a checked, tested bank with tools to stu
 - `interview` command: `list`, `show`, `quiz`, `stats` and `lint`, with validated options.
 - InterviewDeck, an example SwiftUI app for iOS and macOS that bundles the questions.
 - DocC documentation with three articles, published to GitHub Pages.
+- README translations in nine languages: Turkish, Simplified Chinese, Japanese, Korean, Spanish,
+  German, French, Brazilian Portuguese and Russian. Each records the version of the English README
+  it follows, and CI reports a translation that falls behind.
 - CI through the shared workflows: Swift tests on macOS and an iPhone simulator, Flutter and
   Node.js answer tests, the example app, documentation, links and hygiene.
 
@@ -38,8 +41,8 @@ The question collection is rewritten as a checked, tested bank with tools to stu
 
 - The previous Markdown files (`ios-questions/`, `docs/`, `android-questions/`,
   `flutter-questions/`, `react-native-questions/`), which duplicated topics and had no checks.
-- `Documentation/` and `Templates/`, which described a question API that did not exist, and the
-  Turkish README, which will return with the other translations.
+- `Documentation/` and `Templates/`, which described a question API that did not exist.
+- `README_TR.md`, a Turkish copy of the old README; `README.tr.md` replaces it.
 - The markdownlint workflow that ran with `continue-on-error` and could not fail.
 
 ## [1.0.0] - 2026-02-03
