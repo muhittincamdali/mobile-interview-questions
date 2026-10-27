@@ -63,6 +63,24 @@ struct AnswerBlockTests {
         #expect(AnswerBlock.joiningSoftLineBreaks("\n\n") == "")
     }
 
+    @Test func keepsALeadingParagraphBreakAndDropsTrailingBlankLines() {
+        #expect(AnswerBlock.joiningSoftLineBreaks("\n\nA\nB\n\n\n- c\n\n") == "\nA B\n\n- c")
+    }
+
+    /// One 1 MB paragraph of 500,000 one-word lines. Rebuilding the paragraph for every line
+    /// took 8 s in a debug build; appending in place takes about half a second.
+    @Test func joinsAMegabyteParagraphInLinearTime() {
+        let text = String(repeating: "w\n", count: 500_000)
+        let clock = ContinuousClock()
+        var joined = ""
+        let elapsed = clock.measure {
+            joined = AnswerBlock.joiningSoftLineBreaks(text)
+        }
+        #expect(joined.count == 500_000 * 2 - 1)
+        #expect(!joined.contains("\n"))
+        #expect(elapsed < .seconds(4), "joining took \(elapsed)")
+    }
+
     @Test func dropsBlankProse() {
         #expect(AnswerBlock.split("\n\n   \n").isEmpty)
     }

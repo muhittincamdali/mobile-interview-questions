@@ -126,24 +126,38 @@ public enum AnswerBlock: Hashable, Sendable {
     /// Blank lines still separate paragraphs, and list items (`- `, `* `, `+ `, `1. `) still
     /// start on a new line; an indented continuation line is joined to its item.
     public static func joiningSoftLineBreaks(_ text: String) -> String {
-        var output: [String] = []
+        var output = ""
+        // The line being built is appended to in place: rebuilding `last + " " + line` for every
+        // wrapped line copied the paragraph each time, which was quadratic for long paragraphs.
+        var current = ""
+        var pendingBreak = false
+        func flushCurrent() {
+            guard !current.isEmpty else { return }
+            if pendingBreak {
+                output += output.isEmpty ? "\n" : "\n\n"
+            } else if !output.isEmpty {
+                output += "\n"
+            }
+            output += current
+            current = ""
+            pendingBreak = false
+        }
         for line in QuestionParser.splitLines(text) {
             let trimmed = line.trimmingSpaces()
             if trimmed.isEmpty {
-                output.append("")
-            } else if let last = output.last, !last.isEmpty, !isListItem(trimmed) {
-                output[output.count - 1] = last + " " + trimmed
+                flushCurrent()
+                // Runs of blank lines collapse into one paragraph break.
+                pendingBreak = true
+            } else if !current.isEmpty, !isListItem(trimmed) {
+                current += " "
+                current += trimmed
             } else {
-                output.append(isListItem(trimmed) ? String(line).trimmingSpaces() : trimmed)
+                flushCurrent()
+                current = trimmed
             }
         }
-        while output.last == "" { output.removeLast() }
-        // Collapse runs of blank lines into one paragraph break.
-        var collapsed: [String] = []
-        for line in output where !(line.isEmpty && collapsed.last?.isEmpty == true) {
-            collapsed.append(line)
-        }
-        return collapsed.joined(separator: "\n")
+        flushCurrent()
+        return output
     }
 
     static func isListItem(_ line: String) -> Bool {
