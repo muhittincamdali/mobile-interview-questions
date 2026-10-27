@@ -43,10 +43,11 @@ exclude = [
 remap = [
   '^https://raw\.githubusercontent\.com/muhittincamdali/mobile-interview-questions/main/(.*)$ file:///home/runner/work/mobile-interview-questions/mobile-interview-questions/$1',
   '^https://github\.com/muhittincamdali/mobile-interview-questions/(?:blob|tree)/main/(.*)$ file:///home/runner/work/mobile-interview-questions/mobile-interview-questions/$1',
-  # The article pages on GitHub Pages are built from the .docc articles by docs.yml after a push
-  # to main, so a pull request that adds an article links to a page that is not online yet. Each
-  # article URL is checked against its source file instead; the documentation root stays a live
-  # check, so a site that is down still fails.
+  # The documentation pages on GitHub Pages are built from the .docc catalog by docs.yml after a
+  # push to main, so a pull request that adds a page, or the first one before Pages is deployed,
+  # links to a page that is not online yet. Each page URL, the documentation root included, is
+  # checked against its source file instead. docs.yml itself fails when the site cannot be built.
+  '^https://muhittincamdali\.github\.io/mobile-interview-questions/documentation/interviewbank/?$ file:///home/runner/work/mobile-interview-questions/mobile-interview-questions/Sources/InterviewBank/InterviewBank.docc/InterviewBank.md',
   '^https://muhittincamdali\.github\.io/mobile-interview-questions/documentation/interviewbank/gettingstarted$ file:///home/runner/work/mobile-interview-questions/mobile-interview-questions/Sources/InterviewBank/InterviewBank.docc/GettingStarted.md',
   '^https://muhittincamdali\.github\.io/mobile-interview-questions/documentation/interviewbank/writingquestions$ file:///home/runner/work/mobile-interview-questions/mobile-interview-questions/Sources/InterviewBank/InterviewBank.docc/WritingQuestions.md',
   '^https://muhittincamdali\.github\.io/mobile-interview-questions/documentation/interviewbank/buildingastudyapp$ file:///home/runner/work/mobile-interview-questions/mobile-interview-questions/Sources/InterviewBank/InterviewBank.docc/BuildingAStudyApp.md',
