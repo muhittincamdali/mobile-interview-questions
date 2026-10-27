@@ -82,20 +82,25 @@ struct BankLinterTests {
     /// Before the IDs were collected once per file, 1000 questions linking a 1 MiB test file took
     /// about 14 seconds in a release build, because the file was searched again for each question.
     @Test func scansALinkedTestFileOncePerFile() throws {
-        let filler = String(repeating: "// padding line without question IDs\n", count: 27_000)
-        let ids = (0..<1000).map { String(format: "IOS-%03d", $0) }
-        var files = ["Tests/Big.swift": filler + ids.map { "@Test(\"\($0)\") func t() {}" }.joined(separator: "\n")]
-        for (half, slice) in [ids[..<500], ids[500...]].enumerated() {
-            let meta = " · **Verified by:** [T](../../Tests/Big.swift)"
-            files["questions/ios/\(half).md"] = "# T\n\n" + slice.map { TemporaryFolder.question($0, meta: meta) }.joined(separator: "\n")
+        // The file and the number of questions that link it grow together: a search of the file
+        // for every question makes the work quadratic in `scale`.
+        func lintLinkedQuestions(scale: Int) throws -> [Diagnostic] {
+            let filler = String(repeating: "// padding line without question IDs\n", count: 3_375 * scale)
+            let ids = (0..<(125 * scale)).map { String(format: "IOS-%03d", $0) }
+            var files = ["Tests/Big.swift": filler + ids.map { "@Test(\"\($0)\") func t() {}" }.joined(separator: "\n")]
+            let middle = ids.count / 2
+            for (half, slice) in [ids[..<middle], ids[middle...]].enumerated() {
+                let meta = " · **Verified by:** [T](../../Tests/Big.swift)"
+                files["questions/ios/\(half).md"] = "# T\n\n" + slice.map { TemporaryFolder.question($0, meta: meta) }.joined(separator: "\n")
+            }
+            #expect(files["Tests/Big.swift"]!.utf8.count < BankLimits.default.maxFileBytes)
+            return try lint(files)
         }
-        #expect(files["Tests/Big.swift"]!.utf8.count < BankLimits.default.maxFileBytes)
 
-        let clock = ContinuousClock()
         var diagnostics: [Diagnostic] = []
-        let elapsed = try clock.measure { diagnostics = try lint(files) }
+        let growth = try growthFactor(smallSize: 1) { diagnostics = try lintLinkedQuestions(scale: $0) }
         #expect(diagnostics.isEmpty)
-        #expect(elapsed < .seconds(5), "lint took \(elapsed)")
+        #expect(growth < maximumLinearGrowth, "8 times the questions took \(growth) times as long")
     }
 
     @Test func sharesTheDiagnosticLimitOfAFileWithTheLoader() throws {
