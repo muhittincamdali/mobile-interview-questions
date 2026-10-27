@@ -33,6 +33,9 @@ Open an issue with the **Answer correction** template and include:
     | JavaScript       | `answers/react-native/test` | `cd answers/react-native && npm test` |
 
     The test should fail if the answer is wrong, including the edge case the answer warns about.
+    `swift test` also runs on Linux. A check that only holds for Apple's Foundation is skipped
+    there with `.enabled(if: usesAppleFoundation, "why")`, as one URLSession cancellation test
+    in `NetworkingTests.swift` is.
 
 4. Update the question count of the file in [questions/README.md](questions/README.md), and the
    totals in the README if they change; `swift test` checks both.

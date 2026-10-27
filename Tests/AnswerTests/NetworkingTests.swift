@@ -1,4 +1,8 @@
 import Foundation
+#if canImport(FoundationNetworking)
+// On Linux, URLSession and URLRequest live in a separate module.
+import FoundationNetworking
+#endif
 import Testing
 
 // Checks the claims in questions/ios/data-and-networking.md with a URLProtocol stub, so no
@@ -22,6 +26,12 @@ final class StubProtocol: URLProtocol {
 
     override func stopLoading() {}
 }
+
+#if canImport(Darwin)
+let usesAppleFoundation = true
+#else
+let usesAppleFoundation = false
+#endif
 
 enum HTTPError: Error, Equatable {
     case notHTTP
@@ -61,7 +71,7 @@ struct NetworkingTests {
         }
     }
 
-    @Test("IOS-049: cancelling the task cancels the request with URLError.cancelled")
+    @Test("IOS-049: cancelling the task before the request throws CancellationError")
     func cancellingARequest() async {
         let task = Task {
             try await Task.sleep(for: .seconds(60))
@@ -70,7 +80,16 @@ struct NetworkingTests {
         task.cancel()
         let result = await task.result
         #expect(throws: CancellationError.self) { try result.get() }
+    }
 
+    /// The answer describes Apple's URLSession. swift-corelibs-foundation, the Foundation used on
+    /// Linux, starts the request even when the task is already cancelled, so this check runs only
+    /// where the answer applies.
+    @Test(
+        "IOS-049: a request started in a cancelled task fails with URLError.cancelled",
+        .enabled(if: usesAppleFoundation, "Linux Foundation does not cancel a request from a cancelled task")
+    )
+    func requestInACancelledTask() async {
         let cancelledBeforeRequest = Task {
             withUnsafeCurrentTask { $0?.cancel() }
             return try await session.data(from: URL(string: "https://api.test/items/200")!)
