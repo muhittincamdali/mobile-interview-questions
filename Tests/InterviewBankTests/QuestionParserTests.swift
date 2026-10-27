@@ -156,16 +156,16 @@ struct QuestionParserTests {
 
     /// A file at the 1 MiB limit that is almost all blank lines. Trimming them one
     /// `removeFirst()` at a time took minutes; slicing reads the file in well under a second.
-    @Test func trimsAMegabyteOfBlankLinesInLinearTime() {
-        let blankLines = String(repeating: "\n", count: 1 << 19)
-        let text = "# T\n\n## IOS-007: Q?\n\n**Level:** mid\n" + blankLines + "A.\nB." + blankLines
-        let clock = ContinuousClock()
-        var parsed: ParsedFile?
-        let elapsed = clock.measure {
-            parsed = QuestionParser.parse(text, track: .ios, file: "f.md")
+    @Test func trimsAMegabyteOfBlankLinesInLinearTime() throws {
+        func parse(blankLineCount: Int) -> ParsedFile {
+            let blankLines = String(repeating: "\n", count: blankLineCount)
+            let text = "# T\n\n## IOS-007: Q?\n\n**Level:** mid\n" + blankLines + "A.\nB." + blankLines
+            return QuestionParser.parse(text, track: .ios, file: "f.md")
         }
+        var parsed: ParsedFile?
+        let growth = try growthFactor(smallSize: 1 << 16) { parsed = parse(blankLineCount: $0) }
         #expect(parsed?.questions.first?.answer == "A.\nB.")
-        #expect(elapsed < .seconds(10), "parsing took \(elapsed)")
+        #expect(growth < maximumLinearGrowth, "8 times the blank lines took \(growth) times as long")
     }
 
     /// A 1 MiB file of `# a` lines has 262,144 problems; 32 such files used 1.7 GB of memory

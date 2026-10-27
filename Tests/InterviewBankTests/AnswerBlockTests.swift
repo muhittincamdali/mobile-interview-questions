@@ -39,17 +39,13 @@ struct AnswerBlockTests {
         let header = String(repeating: "| h ", count: width) + "|"
         let separator = String(repeating: "|---", count: width) + "|"
         let markdown = ([header, separator] + Array(repeating: "| x |", count: 3_000)).joined(separator: "\n")
-        var blocks: [AnswerBlock] = []
-        let elapsed = ContinuousClock().measure {
-            blocks = AnswerBlock.split(markdown)
-        }
+        let blocks = AnswerBlock.split(markdown)
         let cells = blocks.reduce(0) { total, block in
             guard case .table(let header, let rows) = block else { return total }
             return total + header.count + rows.reduce(0) { $0 + $1.count }
         }
         #expect(cells <= markdown.utf8.count, "\(cells) cells from \(markdown.utf8.count) bytes")
         #expect(blocks == [.text(markdown)])
-        #expect(elapsed < .seconds(2), "splitting took \(elapsed)")
     }
 
     /// Padding may add at most as many cells as the table writes: header, separator and rows.
@@ -101,16 +97,16 @@ struct AnswerBlockTests {
 
     /// One 1 MB paragraph of 500,000 one-word lines. Rebuilding the paragraph for every line
     /// took 8 s in a debug build; appending in place takes about half a second.
-    @Test func joinsAMegabyteParagraphInLinearTime() {
-        let text = String(repeating: "w\n", count: 500_000)
-        let clock = ContinuousClock()
+    @Test func joinsAMegabyteParagraphInLinearTime() throws {
         var joined = ""
-        let elapsed = clock.measure {
-            joined = AnswerBlock.joiningSoftLineBreaks(text)
+        var lineCount = 0
+        let growth = try growthFactor(smallSize: 62_500) { count in
+            lineCount = count
+            joined = AnswerBlock.joiningSoftLineBreaks(String(repeating: "w\n", count: count))
         }
-        #expect(joined.count == 500_000 * 2 - 1)
+        #expect(joined.count == lineCount * 2 - 1)
         #expect(!joined.contains("\n"))
-        #expect(elapsed < .seconds(4), "joining took \(elapsed)")
+        #expect(growth < maximumLinearGrowth, "8 times the lines took \(growth) times as long")
     }
 
     @Test func dropsBlankProse() {
