@@ -111,7 +111,18 @@ struct QuestionParserTests {
         let parsed = QuestionParser.parse("# \(heading)\n\n## IOS-001: Q?\n\n**Level:** mid\n\nA.", track: .ios, file: "f.md")
         #expect(parsed.topic == String(heading.dropLast()))
         #expect(parsed.questions.first?.topic == parsed.topic)
-        #expect(parsed.diagnostics.map(\.message) == ["the `# ` heading is longer than 100 characters; the topic was cut"])
+        #expect(parsed.diagnostics.map(\.message) == ["the `# ` heading is longer than 100 Unicode scalars; the topic was cut"])
+        #expect(parsed.diagnostics.map(\.location.line) == [1])
+    }
+
+    /// "T" followed by combining marks is one Character however many marks follow, so a limit
+    /// counted in Characters kept a heading of 520,000 marks in full.
+    @Test func cutsATopicOfCombiningMarksByScalars() {
+        let heading = "T" + String(repeating: "\u{0301}", count: 1_000)
+        #expect(heading.count == 1)
+        let parsed = QuestionParser.parse("# \(heading)\n\n## IOS-001: Q?\n\n**Level:** mid\n\nA.", track: .ios, file: "f.md")
+        #expect(parsed.topic?.unicodeScalars.count == QuestionParser.maximumTopicLength)
+        #expect(parsed.topic == "T" + String(repeating: "\u{0301}", count: 99))
         #expect(parsed.diagnostics.map(\.location.line) == [1])
     }
 

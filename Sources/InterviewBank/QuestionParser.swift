@@ -27,9 +27,11 @@ public enum QuestionParser {
     static let verifiedPrefix = "**Verified by:** "
     static let referencePrefixes = ["**Reference:** ", "**References:** "]
     static let separator = " · "
-    /// Longest topic kept from a `# ` heading. The topic is printed with every question of the
-    /// file, so an unbounded heading multiplied the output of `interview list` by up to 500
-    /// questions; the longest topic in the bank has 29 characters.
+    /// Longest topic kept from a `# ` heading, in Unicode scalars. The topic is printed with every
+    /// question of the file, so an unbounded heading multiplied the output of `interview list` by
+    /// up to 500 questions; the longest topic in the bank has 29 scalars. Scalars, not Characters:
+    /// one Character can hold any number of combining marks, so a limit in Characters let a 1 MB
+    /// heading through as a single Character.
     public static let maximumTopicLength = 100
 
     public static func parse(
@@ -63,10 +65,11 @@ public enum QuestionParser {
             if line.hasPrefix("# ") {
                 if parsed.topic == nil && current == nil && parsed.questions.isEmpty {
                     let topic = line.dropFirst(2).trimmingSpaces()
-                    if topic.count > maximumTopicLength {
-                        log.append(Diagnostic("the `# ` heading is longer than \(maximumTopicLength) characters; the topic was cut", at: location))
+                    let scalars = topic.unicodeScalars
+                    if scalars.count > maximumTopicLength {
+                        log.append(Diagnostic("the `# ` heading is longer than \(maximumTopicLength) Unicode scalars; the topic was cut", at: location))
                     }
-                    parsed.topic = String(topic.prefix(maximumTopicLength))
+                    parsed.topic = String(String.UnicodeScalarView(scalars.prefix(maximumTopicLength)))
                 } else {
                     log.append(Diagnostic("only one `# ` heading is allowed, before the first question", at: location))
                 }

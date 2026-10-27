@@ -105,6 +105,24 @@ struct InterviewToolTests {
         #expect(output.standardOutput.utf8.count < 100_000, "500 rows of about 120 bytes")
     }
 
+    /// The same file under a heading of one "T" and about 520,000 combining marks, which is a
+    /// single Character: the limit was counted in Characters, so lint passed and the listing
+    /// printed 504 MB. The limit now counts Unicode scalars.
+    @Test func listsACombiningMarkHeadingAsAHundredScalarTopic() throws {
+        let questions = (2...500).map { String(format: "## FLT-%03d: Q?\n\n**Level:** mid\n\nA.\n\n**Reference:** [K](https://api.flutter.dev/)\n", $0) }
+        let heading = "# T" + String(repeating: "\u{0301}", count: 500_000) + "\n\n"
+        let fixture = try Fixture(extra: ["questions/flutter/long.md": heading + questions.joined(separator: "\n")])
+        let lint = fixture.run(["lint"])
+        #expect(lint.status != 0)
+        #expect(lint.standardOutput.contains("longer than 100 Unicode scalars"))
+        let output = fixture.run(["list", "--track", "flutter"])
+        let topic = "T" + String(repeating: "\u{0301}", count: 99)
+        #expect(output.status == 0)
+        // The topic is one Character, so it is padded to the 7 of "Widgets" (FLT-001).
+        #expect(output.standardOutput.hasPrefix("FLT-002  mid  \(topic)        Q?\n"))
+        #expect(output.standardOutput.utf8.count < 200_000, "500 rows of at most about 320 bytes")
+    }
+
     /// The size of each write, to see that a listing is written line by line.
     struct WriteSizes: TextOutputStream {
         var sizes: [Int] = []
