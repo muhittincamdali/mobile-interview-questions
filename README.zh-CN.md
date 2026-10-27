@@ -1,4 +1,4 @@
-<!-- i18n-source: README.md@44f564ab04495f1a227681c77f2b694dcbacd7b3 status=reviewed -->
+<!-- i18n-source: README.md@1616d72d635be23227644c65d518040fd9e862bc status=reviewed -->
 <!-- brand:start -->
 
 <p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-light.svg" alt="Mobile Interview Questions: Interview questions for iOS, Android, Flutter and React Native, with sourced answers and tested code."></picture></p>
@@ -167,7 +167,7 @@ for question in Quiz.pick(5, from: pool, seed: 2026) {
 }
 ```
 
-读取有大小限制（每个文件 1 MiB，最多 256 个文件，每个文件最多 500 道题），每个格式问题都会以带有文件和行号的 `Diagnostic` 返回，而不是抛出异常。
+读取有大小限制（每个文件 1 MiB，最多 256 个文件，每个文件最多 500 道题和 100 条报告的问题），每个格式问题都会以带有文件和行号的 `Diagnostic` 返回，而不是抛出异常。
 
 ## 文档
 

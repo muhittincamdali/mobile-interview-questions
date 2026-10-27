@@ -148,6 +148,25 @@ struct QuestionParserTests {
         #expect(elapsed < .seconds(10), "parsing took \(elapsed)")
     }
 
+    /// A 1 MiB file of `# a` lines has 262,144 problems; 32 such files used 1.7 GB of memory
+    /// before the number reported per file was limited.
+    @Test func reportsAtMostTheDiagnosticLimitOfAFile() {
+        let text = String(repeating: "# a\n", count: (1 << 20) / 4)
+        let parsed = QuestionParser.parse(text, track: .ios, file: "f.md")
+        let limit = BankLimits.default.maxDiagnosticsPerFile
+        #expect(parsed.diagnostics.count == limit + 1)
+        #expect(parsed.diagnostics.last?.message == "more than \(limit) problems in this file; the rest were not reported")
+        #expect(parsed.diagnostics.last?.location.line == limit + 2, "the first problem that was not reported")
+    }
+
+    @Test func appliesASmallerDiagnosticLimitToEveryKindOfProblem() {
+        let text = "# T\n\n## bad\n\n## IOS-001: Q?\n\n**Level:** expert\n\n## IOS-002: Q?\n\n**Level:** mid\n\n**Reference:** none"
+        let parsed = QuestionParser.parse(text, track: .ios, file: "f.md", maxDiagnostics: 2)
+        #expect(parsed.diagnostics.map(\.location.line) == [3, 7, 13])
+        #expect(parsed.diagnostics.last?.message.hasPrefix("more than 2 problems") == true)
+        #expect(parsed.questions.map(\.id) == ["IOS-002"], "questions are still read after the limit")
+    }
+
     @Test func readsAnEmptyFileAsEmpty() {
         let parsed = QuestionParser.parse("", track: .ios, file: "f.md")
         #expect(parsed.topic == nil)

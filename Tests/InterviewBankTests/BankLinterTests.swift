@@ -97,4 +97,21 @@ struct BankLinterTests {
         #expect(diagnostics.isEmpty)
         #expect(elapsed < .seconds(5), "lint took \(elapsed)")
     }
+
+    @Test func sharesTheDiagnosticLimitOfAFileWithTheLoader() throws {
+        let folder = try TemporaryFolder()
+        // One format problem from the loader, then two content problems for each question.
+        let questions = (1...10).map { TemporaryFolder.question(String(format: "FLT-%03d", $0), answer: " ") }
+        try folder.write("questions/ios/a.md", "# A\n\n## bad\n\n" + questions.joined(separator: "\n"))
+        try folder.write("questions/ios/b.md", "# B\n\n" + TemporaryFolder.question("IOS-001", answer: " "))
+        let questionsFolder = folder.url.appendingPathComponent("questions")
+        let limits = BankLimits(maxFileBytes: 1 << 20, maxFiles: 10, maxQuestionsPerFile: 50, maxDiagnosticsPerFile: 4)
+        let bank = try QuestionBank.load(from: questionsFolder, limits: limits)
+
+        let diagnostics = BankLinter(questionsFolder: questionsFolder, repositoryRoot: folder.url, limits: limits).lint(bank)
+
+        #expect(diagnostics.filter { $0.location.file == "ios/a.md" }.count == 5)
+        #expect(diagnostics.last { $0.location.file == "ios/a.md" }?.message == "more than 4 problems in this file; the rest were not reported")
+        #expect(diagnostics.filter { $0.location.file == "ios/b.md" }.map(\.message) == ["IOS-001 has no answer"])
+    }
 }

@@ -195,7 +195,7 @@ for question in Quiz.pick(5, from: pool, seed: 2026) {
 }
 ```
 
-Reading is bounded (1 MiB per file, 256 files, 500 questions per file), and every format problem
+Reading is bounded (1 MiB per file, 256 files, 500 questions and 100 reported problems per file), and every format problem
 comes back as a `Diagnostic` with a file and line instead of an exception.
 
 ## Documentation

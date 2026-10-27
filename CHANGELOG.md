@@ -20,8 +20,8 @@ The question collection is rewritten as a checked, tested bank with tools to stu
   `answers/flutter` and `node --test` in `answers/react-native`. Each test is named after the
   question it checks.
 - `InterviewBank` library: a parser that reports problems with file and line, bounded loading
-  (1 MiB per file, 256 files, 500 questions per file), a linter, filtering and search, seeded
-  quizzes and `AnswerBlock` for rendering prose, code and tables.
+  (1 MiB per file, 256 files, 500 questions and 100 reported problems per file), a linter,
+  filtering and search, seeded quizzes and `AnswerBlock` for rendering prose, code and tables.
 - `interview` command: `list`, `show`, `quiz`, `stats` and `lint`, with validated options.
 - InterviewDeck, an example SwiftUI app for iOS and macOS that bundles the questions.
 - DocC documentation with three articles, published to GitHub Pages.

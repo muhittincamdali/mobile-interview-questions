@@ -1,4 +1,4 @@
-<!-- i18n-source: README.md@44f564ab04495f1a227681c77f2b694dcbacd7b3 status=reviewed -->
+<!-- i18n-source: README.md@1616d72d635be23227644c65d518040fd9e862bc status=reviewed -->
 <!-- brand:start -->
 
 <p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-light.svg" alt="Mobile Interview Questions: Interview questions for iOS, Android, Flutter and React Native, with sourced answers and tested code."></picture></p>
@@ -167,7 +167,7 @@ for question in Quiz.pick(5, from: pool, seed: 2026) {
 }
 ```
 
-La lectura está acotada (1 MiB por archivo, 256 archivos, 500 preguntas por archivo), y cada problema de formato se devuelve como un `Diagnostic` con archivo y línea en lugar de una excepción.
+La lectura está acotada (1 MiB por archivo, 256 archivos, 500 preguntas y 100 problemas notificados por archivo), y cada problema de formato se devuelve como un `Diagnostic` con archivo y línea en lugar de una excepción.
 
 ## Documentación
 

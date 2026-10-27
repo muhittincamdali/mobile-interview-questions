@@ -20,9 +20,22 @@ public struct BankLinter: Sendable {
         self.limits = limits
     }
 
-    /// The loader's diagnostics followed by the content problems, in file order.
+    /// The loader's diagnostics followed by the content problems, in file order, with at most
+    /// ``BankLimits/maxDiagnosticsPerFile`` problems for each file.
     public func lint(_ bank: QuestionBank) -> [Diagnostic] {
         var diagnostics = bank.diagnostics
+        // A file's count starts at what the loader reported for it, so loader and linter share
+        // one limit per file.
+        var reported = Dictionary(bank.diagnostics.map { ($0.location.file, 1) }, uniquingKeysWith: +)
+        func report(_ message: String, at location: SourceLocation) {
+            let count = reported[location.file, default: 0]
+            reported[location.file] = count + 1
+            if count < limits.maxDiagnosticsPerFile {
+                diagnostics.append(Diagnostic(message, at: location))
+            } else if count == limits.maxDiagnosticsPerFile {
+                diagnostics.append(DiagnosticLog.overflow(limit: limits.maxDiagnosticsPerFile, at: location))
+            }
+        }
         var firstUse: [String: SourceLocation] = [:]
         // The question IDs each linked test file names, read and scanned once per file.
         var testFiles: [String: Set<String>?] = [:]
@@ -30,25 +43,25 @@ public struct BankLinter: Sendable {
         for question in bank.questions {
             let location = question.location
             if let earlier = firstUse[question.id] {
-                diagnostics.append(Diagnostic("\(question.id) is already used at \(earlier)", at: location))
+                report("\(question.id) is already used at \(earlier)", at: location)
             } else {
                 firstUse[question.id] = location
             }
             if !question.id.hasPrefix(question.track.idPrefix + "-") {
-                diagnostics.append(Diagnostic("\(question.id) is in the \(question.track.rawValue) track, so its ID must start with \(question.track.idPrefix)-", at: location))
+                report("\(question.id) is in the \(question.track.rawValue) track, so its ID must start with \(question.track.idPrefix)-", at: location)
             }
             if question.answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                diagnostics.append(Diagnostic("\(question.id) has no answer", at: location))
+                report("\(question.id) has no answer", at: location)
             }
             if question.track.requiresReference && question.references.isEmpty {
-                diagnostics.append(Diagnostic("\(question.id) needs a **Reference:** line with a primary source", at: location))
+                report("\(question.id) needs a **Reference:** line with a primary source", at: location)
             }
             for reference in question.references where !Self.isSecureLink(reference) {
-                diagnostics.append(Diagnostic("\(question.id): reference `\(reference)` must be an https URL", at: location))
+                report("\(question.id): reference `\(reference)` must be an https URL", at: location)
             }
             if let target = question.verifiedBy {
                 if let problem = checkVerification(of: question, target: target, cache: &testFiles) {
-                    diagnostics.append(Diagnostic(problem, at: location))
+                    report(problem, at: location)
                 }
             }
         }

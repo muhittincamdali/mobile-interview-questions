@@ -9,14 +9,19 @@ public struct BankLimits: Sendable, Equatable {
     public var maxFiles: Int
     /// Most questions read from one file.
     public var maxQuestionsPerFile: Int
+    /// Most problems reported for one file; one more line says that the rest were not reported.
+    /// Without it, a 1 MiB file of repeated `# a` lines produced 262,144 diagnostics.
+    public var maxDiagnosticsPerFile: Int
 
-    public init(maxFileBytes: Int, maxFiles: Int, maxQuestionsPerFile: Int) {
+    public init(maxFileBytes: Int, maxFiles: Int, maxQuestionsPerFile: Int, maxDiagnosticsPerFile: Int = 100) {
         self.maxFileBytes = maxFileBytes
         self.maxFiles = maxFiles
         self.maxQuestionsPerFile = maxQuestionsPerFile
+        self.maxDiagnosticsPerFile = maxDiagnosticsPerFile
     }
 
-    /// 1 MiB per file, 256 files and 500 questions per file: far above what the bank uses.
+    /// 1 MiB per file, 256 files, 500 questions and 100 reported problems per file: far above
+    /// what the bank uses.
     public static let `default` = BankLimits(maxFileBytes: 1 << 20, maxFiles: 256, maxQuestionsPerFile: 500)
 }
 
@@ -91,7 +96,13 @@ public struct QuestionBank: Sendable {
                     bank.diagnostics.append(Diagnostic("skipped: larger than \(limits.maxFileBytes) bytes or not UTF-8", at: location))
                     continue
                 }
-                let parsed = QuestionParser.parse(text, track: track, file: relative, maxQuestions: limits.maxQuestionsPerFile)
+                let parsed = QuestionParser.parse(
+                    text,
+                    track: track,
+                    file: relative,
+                    maxQuestions: limits.maxQuestionsPerFile,
+                    maxDiagnostics: limits.maxDiagnosticsPerFile
+                )
                 bank.questions += parsed.questions
                 bank.diagnostics += parsed.diagnostics
             }

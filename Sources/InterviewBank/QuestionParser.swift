@@ -21,7 +21,7 @@ public struct ParsedFile: Sendable {
 /// ```
 ///
 /// The parser never throws: everything it cannot read becomes a ``Diagnostic`` with a line
-/// number, so one run reports every problem in a file.
+/// number, so one run reports every problem in a file, up to `maxDiagnostics` of them.
 public enum QuestionParser {
     static let levelPrefix = "**Level:** "
     static let verifiedPrefix = "**Verified by:** "
@@ -32,9 +32,11 @@ public enum QuestionParser {
         _ text: String,
         track: Track,
         file: String,
-        maxQuestions: Int = BankLimits.default.maxQuestionsPerFile
+        maxQuestions: Int = BankLimits.default.maxQuestionsPerFile,
+        maxDiagnostics: Int = BankLimits.default.maxDiagnosticsPerFile
     ) -> ParsedFile {
         var parsed = ParsedFile(topic: nil, questions: [], diagnostics: [])
+        var log = DiagnosticLog(limit: maxDiagnostics)
         let lines = splitLines(text)
         var fence = FenceTracker()
         var current: QuestionDraft?
@@ -42,7 +44,7 @@ public enum QuestionParser {
         func finish() {
             guard let draft = current else { return }
             current = nil
-            if let question = draft.build(track: track, topic: parsed.topic ?? "", file: file, diagnostics: &parsed.diagnostics) {
+            if let question = draft.build(track: track, topic: parsed.topic ?? "", file: file, diagnostics: &log) {
                 parsed.questions.append(question)
             }
         }
@@ -58,22 +60,23 @@ public enum QuestionParser {
                 if parsed.topic == nil && current == nil && parsed.questions.isEmpty {
                     parsed.topic = line.dropFirst(2).trimmingSpaces()
                 } else {
-                    parsed.diagnostics.append(Diagnostic("only one `# ` heading is allowed, before the first question", at: location))
+                    log.append(Diagnostic("only one `# ` heading is allowed, before the first question", at: location))
                 }
                 continue
             }
             if line.hasPrefix("## ") {
                 finish()
                 if parsed.questions.count >= maxQuestions {
-                    parsed.diagnostics.append(Diagnostic("more than \(maxQuestions) questions in one file; the rest were not read", at: location))
+                    log.append(Diagnostic("more than \(maxQuestions) questions in one file; the rest were not read", at: location))
+                    parsed.diagnostics = log.entries
                     return parsed
                 }
                 if parsed.topic == nil {
-                    parsed.diagnostics.append(Diagnostic("the file needs a `# Topic` heading before its first question", at: location))
+                    log.append(Diagnostic("the file needs a `# Topic` heading before its first question", at: location))
                     parsed.topic = ""
                 }
                 guard let (id, title) = parseHeading(line.dropFirst(3)) else {
-                    parsed.diagnostics.append(Diagnostic("question headings look like `## IOS-001: Question?`", at: location))
+                    log.append(Diagnostic("question headings look like `## IOS-001: Question?`", at: location))
                     continue
                 }
                 current = QuestionDraft(id: id, title: title, line: number)
@@ -82,9 +85,10 @@ public enum QuestionParser {
             current?.body.append((number, line))
         }
         if fence.isOpen {
-            parsed.diagnostics.append(Diagnostic("a code block is not closed", at: SourceLocation(file: file, line: lines.count)))
+            log.append(Diagnostic("a code block is not closed", at: SourceLocation(file: file, line: lines.count)))
         }
         finish()
+        parsed.diagnostics = log.entries
         return parsed
     }
 
@@ -157,7 +161,7 @@ private struct QuestionDraft {
     var line: Int
     var body: [(Int, Substring)] = []
 
-    func build(track: Track, topic: String, file: String, diagnostics: inout [Diagnostic]) -> Question? {
+    func build(track: Track, topic: String, file: String, diagnostics: inout DiagnosticLog) -> Question? {
         let headingLocation = SourceLocation(file: file, line: line)
         guard let metaIndex = body.firstIndex(where: { !$0.1.trimmingSpaces().isEmpty }) else {
             diagnostics.append(Diagnostic("\(id) has no level line and no answer", at: headingLocation))
@@ -208,7 +212,7 @@ private struct QuestionDraft {
     }
 
     /// `**Level:** senior · **Verified by:** [Name](path)`.
-    private func parseMeta(_ text: Substring, location: SourceLocation, diagnostics: inout [Diagnostic]) -> (Level, String?)? {
+    private func parseMeta(_ text: Substring, location: SourceLocation, diagnostics: inout DiagnosticLog) -> (Level, String?)? {
         let parts = text.trimmingSpaces().components(separatedBy: QuestionParser.separator)
         guard let first = parts.first, first.hasPrefix(QuestionParser.levelPrefix) else {
             diagnostics.append(Diagnostic("\(id) must start with `**Level:** junior`, `mid` or `senior`", at: location))
@@ -227,6 +231,32 @@ private struct QuestionDraft {
             return nil
         }
         return (level, target)
+    }
+}
+
+/// The problems of one file: at most `limit`, then one line that says the rest were not
+/// reported, so a file of the same mistake on every line cannot fill memory with diagnostics.
+struct DiagnosticLog {
+    let limit: Int
+    private(set) var entries: [Diagnostic] = []
+    private var isFull = false
+
+    init(limit: Int) {
+        self.limit = max(limit, 0)
+    }
+
+    mutating func append(_ diagnostic: Diagnostic) {
+        guard !isFull else { return }
+        guard entries.count < limit else {
+            isFull = true
+            entries.append(Self.overflow(limit: limit, at: diagnostic.location))
+            return
+        }
+        entries.append(diagnostic)
+    }
+
+    static func overflow(limit: Int, at location: SourceLocation) -> Diagnostic {
+        Diagnostic("more than \(limit) problems in this file; the rest were not reported", at: location)
     }
 }
 

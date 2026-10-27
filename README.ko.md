@@ -1,4 +1,4 @@
-<!-- i18n-source: README.md@44f564ab04495f1a227681c77f2b694dcbacd7b3 status=reviewed -->
+<!-- i18n-source: README.md@1616d72d635be23227644c65d518040fd9e862bc status=reviewed -->
 <!-- brand:start -->
 
 <p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-light.svg" alt="Mobile Interview Questions: Interview questions for iOS, Android, Flutter and React Native, with sourced answers and tested code."></picture></p>
@@ -167,7 +167,7 @@ for question in Quiz.pick(5, from: pool, seed: 2026) {
 }
 ```
 
-읽기에는 상한이 있으며(파일당 1 MiB, 파일 256개, 파일당 질문 500개), 모든 형식 문제는 예외 대신 파일과 줄 번호가 담긴 `Diagnostic`으로 반환됩니다.
+읽기에는 상한이 있으며(파일당 1 MiB, 파일 256개, 파일당 질문 500개와 보고되는 문제 100개), 모든 형식 문제는 예외 대신 파일과 줄 번호가 담긴 `Diagnostic`으로 반환됩니다.
 
 ## 문서
 
