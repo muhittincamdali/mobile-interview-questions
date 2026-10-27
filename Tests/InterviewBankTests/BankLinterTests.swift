@@ -168,6 +168,29 @@ struct AnswerBlockTests {
         #expect(AnswerBlock.split("| a | b |\n| --- |") == [.text("| a | b |\n| --- |")], "column counts must match")
     }
 
+    @Test func joinsWrappedLinesButKeepsParagraphsAndListItems() {
+        let text = """
+            A paragraph that was
+            wrapped at 100 columns.
+
+
+            - first item that
+              continues here
+            - second item
+            12. numbered item
+            2026 is a year, not an item.
+            """
+        #expect(AnswerBlock.joiningSoftLineBreaks(text) == """
+            A paragraph that was wrapped at 100 columns.
+
+            - first item that continues here
+            - second item
+            12. numbered item 2026 is a year, not an item.
+            """)
+        #expect(AnswerBlock.joiningSoftLineBreaks("") == "")
+        #expect(AnswerBlock.joiningSoftLineBreaks("\n\n") == "")
+    }
+
     @Test func dropsBlankProse() {
         #expect(AnswerBlock.split("\n\n   \n").isEmpty)
     }

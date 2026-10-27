@@ -119,4 +119,36 @@ public enum AnswerBlock: Hashable, Sendable {
         if cells.last == "" { cells.removeLast() }
         return cells
     }
+
+    /// Joins the hard-wrapped lines of Markdown prose into paragraphs, for renderers that keep
+    /// line breaks (such as SwiftUI `Text` with `.inlineOnlyPreservingWhitespace`).
+    ///
+    /// Blank lines still separate paragraphs, and list items (`- `, `* `, `+ `, `1. `) still
+    /// start on a new line; an indented continuation line is joined to its item.
+    public static func joiningSoftLineBreaks(_ text: String) -> String {
+        var output: [String] = []
+        for line in QuestionParser.splitLines(text) {
+            let trimmed = line.trimmingSpaces()
+            if trimmed.isEmpty {
+                output.append("")
+            } else if let last = output.last, !last.isEmpty, !isListItem(trimmed) {
+                output[output.count - 1] = last + " " + trimmed
+            } else {
+                output.append(isListItem(trimmed) ? String(line).trimmingSpaces() : trimmed)
+            }
+        }
+        while output.last == "" { output.removeLast() }
+        // Collapse runs of blank lines into one paragraph break.
+        var collapsed: [String] = []
+        for line in output where !(line.isEmpty && collapsed.last?.isEmpty == true) {
+            collapsed.append(line)
+        }
+        return collapsed.joined(separator: "\n")
+    }
+
+    static func isListItem(_ line: String) -> Bool {
+        if line.hasPrefix("- ") || line.hasPrefix("* ") || line.hasPrefix("+ ") { return true }
+        let digits = line.prefix { $0.isASCII && $0.isNumber }
+        return !digits.isEmpty && digits.count <= 3 && line.dropFirst(digits.count).hasPrefix(". ")
+    }
 }
