@@ -73,6 +73,26 @@ struct InterviewToolTests {
             """)
     }
 
+    /// Every row was padded to the longest cell of its column, so one long `# ` heading made each
+    /// listed question as wide as that heading: 500 questions per file under a 500 KB heading
+    /// printed gigabytes. Columns are now padded to at most 40 characters.
+    @Test func padsListColumnsToAtMostFortyCharacters() throws {
+        let topic = String(repeating: "T", count: 200)
+        let fixture = try Fixture(extra: [
+            "questions/flutter/long.md": "# \(topic)\n\n## FLT-002: Long?\n\n**Level:** mid\n\nAn answer.\n\n**Reference:** [Key](https://api.flutter.dev/)\n",
+        ])
+        let output = fixture.run(["list", "--track", "flutter"])
+        let widgets = "Widgets".padding(toLength: 40, withPad: " ", startingAt: 0)
+        #expect(output.status == 0)
+        #expect(output.standardOutput == """
+            FLT-002  mid  \(topic)  Long?
+            FLT-001  mid  \(widgets)  What is a Key?
+
+            2 questions
+
+            """)
+    }
+
     @Test func listFailsWhenNothingMatches() throws {
         let output = try Fixture().run(["list", "--track", "android"])
         #expect(output.status == 1)

@@ -172,15 +172,23 @@ struct Printer {
         return String(scalars)
     }
 
+    /// Columns are padded to this width at most; a longer cell prints in full and shifts its row.
+    /// Padding to the longest cell made one long `# ` heading widen every listed question, so the
+    /// output grew with headings times questions.
+    static let maximumColumnWidth = 40
+
     /// Left-aligned columns; the last column is not padded.
     mutating func table(_ rows: [[String]]) {
         // Cleaned before measuring, so removed characters do not throw the columns off.
         let rows = rows.map { $0.map(Self.terminalSafe) }
         guard let columns = rows.first?.count else { return }
-        let widths = (0..<columns).map { column in rows.map { $0[column].count }.max() ?? 0 }
+        let widths = (0..<columns).map { column in
+            min(rows.map { $0[column].count }.max() ?? 0, Self.maximumColumnWidth)
+        }
         for row in rows {
             let cells = row.enumerated().map { index, cell in
-                index == columns - 1 ? cell : cell.padding(toLength: widths[index], withPad: " ", startingAt: 0)
+                // Not `padding(toLength:)`, which would cut a cell longer than its column.
+                index == columns - 1 ? cell : cell + String(repeating: " ", count: max(0, widths[index] - cell.count))
             }
             line(cells.joined(separator: "  "))
         }
