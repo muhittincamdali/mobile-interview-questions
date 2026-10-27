@@ -1,21 +1,39 @@
+# Managed by the repository kit (muhittincamdali/.github). Edit the inputs, keep the structure.
 name: CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
+  workflow_dispatch:
+
+permissions: {}
 
 jobs:
-  lint:
-    name: Markdown Lint
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: markdownlint
-        uses: DavidAnson/markdownlint-cli2-action@v16
-        with:
-          globs: '**/*.md'
-        continue-on-error: true
+  swift:
+    permissions:
+      contents: read
+    uses: muhittincamdali/.github/.github/workflows/swift-ci.yml@59e72703c617cfab0c12482c477e706c485ed683 # v1.1.1
+    with:
+      platforms: '["iOS","macOS"]'
+      # The package scheme includes every test target: the library and CLI tests, the Swift
+      # answer tests and the lint of the repository's own question files.
+      scheme: MobileInterviewQuestions-Package
+      test-on-simulator: true
+
+  # The Dart and Flutter answers in questions/flutter.
+  flutter-answers:
+    permissions:
+      contents: read
+    uses: muhittincamdali/.github/.github/workflows/flutter-ci.yml@59e72703c617cfab0c12482c477e706c485ed683 # v1.1.1
+    with:
+      working-directory: answers/flutter
+      coverage: false
+
+  # The JavaScript answers in questions/react-native.
+  javascript-answers:
+    permissions:
+      contents: read
+    uses: muhittincamdali/.github/.github/workflows/node-ci.yml@59e72703c617cfab0c12482c477e706c485ed683 # v1.1.1
+    with:
+      working-directory: answers/react-native

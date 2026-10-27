@@ -1,0 +1,40 @@
+name: New question
+description: Suggest a question that interviews ask and the bank does not cover.
+title: "[Question] "
+labels: ["new question"]
+body:
+  - type: dropdown
+    id: track
+    attributes:
+      label: Track
+      options:
+        - iOS
+        - Android
+        - Flutter
+        - React Native
+        - System design
+        - Behavioral
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: The question
+      description: The question as an interviewer would ask it.
+    validations:
+      required: true
+  - type: dropdown
+    id: level
+    attributes:
+      label: Level
+      options:
+        - junior
+        - mid
+        - senior
+    validations:
+      required: true
+  - type: textarea
+    id: answer
+    attributes:
+      label: Answer outline and sources
+      description: The key points of a good answer and links to primary sources, if you have them.

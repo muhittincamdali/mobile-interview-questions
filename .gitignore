@@ -1,21 +1,9 @@
-# OS
 .DS_Store
-Thumbs.db
-desktop.ini
-
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Node
+.build/
+.swiftpm/
+*.xcuserstate
+xcuserdata/
+DerivedData/
 node_modules/
-package-lock.json
-yarn.lock
-
-# Build
-dist/
+.dart_tool/
 build/
-*.log

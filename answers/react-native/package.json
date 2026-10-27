@@ -1,0 +1,14 @@
+{
+  "name": "react-native-answers",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tests that run the JavaScript of the answers in questions/react-native.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Mobile Interview Questions",
+  "repository": "muhittincamdali/mobile-interview-questions",
+  "tagline": {
+    "en": "Interview questions for iOS, Android, Flutter and React Native, with sourced answers and tested code."
+  },
+  "tags": {
+    "en": [
+      "iOS · Android",
+      "Flutter",
+      "React Native",
+      "Tested answers"
+    ]
+  },
+  "motif": "phone",
+  "buttons": [
+    "start",
+    "docs",
+    "examples"
+  ],
+  "links": {
+    "docs": "https://muhittincamdali.github.io/mobile-interview-questions/documentation/interviewbank/",
+    "examples": "Examples/"
+  },
+  "languages": [
+    "en",
+    "tr",
+    "zh-CN",
+    "ja",
+    "ko",
+    "es",
+    "de",
+    "fr",
+    "pt-BR",
+    "ru"
+  ],
+  "docc": {
+    "targets": [
+      "InterviewBank"
+    ]
+  },
+  "socialTheme": "dark"
+}

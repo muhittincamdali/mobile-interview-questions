@@ -1,0 +1,32 @@
+name: Answer correction
+description: An answer is wrong, outdated or unclear.
+title: "[Correction] "
+labels: ["correction"]
+body:
+  - type: input
+    id: question
+    attributes:
+      label: Question ID
+      description: The ID before the question, for example IOS-026.
+      placeholder: IOS-026
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong
+      description: Quote the part of the answer and explain what is wrong or out of date.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Primary source
+      description: A link to Apple, Android, Flutter, Dart, Kotlin or React Native documentation, a Swift Evolution proposal, MDN or an RFC that shows the correct behaviour.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: The OS, SDK or framework version the correction applies to, if it depends on one.

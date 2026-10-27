@@ -1,580 +1,230 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/Swift-6.0-FA7343?style=for-the-badge&logo=swift&logoColor=white" alt="Swift 6.0"/>
-  <img src="https://img.shields.io/badge/Platform-iOS%20|%20macOS%20|%20visionOS-007AFF?style=for-the-badge&logo=apple&logoColor=white" alt="Platform"/>
-  <img src="https://img.shields.io/badge/Standard-Unified%20Core-5856D6?style=for-the-badge" alt="Standard"/>
-</p>
+<!-- brand:start -->
 
----
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/banner-light.svg" alt="Mobile Interview Questions: Interview questions for iOS, Android, Flutter and React Native, with sourced answers and tested code."></picture></p>
 
-> **🛡️ PART OF THE 2026 UNIFIED CORE**
-> This repository is a verified component of 'The Endless March' initiative. Purified for Swift 6, zero-dependency, and engineered for maximum hardware saturation.
-> 
-> *Flagship Engines:* [SwiftNetwork](https://github.com/muhittincamdali/SwiftNetwork) | [SwiftAI](https://github.com/muhittincamdali/SwiftAI) | [LiquidGlassKit](https://github.com/muhittincamdali/LiquidGlassKit)
-
----
+<!-- lang-selector:start -->
+<p align="center"><a href="README.md">English</a> · <a href="README.tr.md">Türkçe</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a> · <a href="README.ko.md">한국어</a> · <a href="README.es.md">Español</a> · <a href="README.de.md">Deutsch</a> · <a href="README.fr.md">Français</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.ru.md">Русский</a></p>
+<!-- lang-selector:end -->
 
 <p align="center">
-  <img src="Assets/banner.png" alt="Mobile Interview Questions" width="800"/>
-</p>
-
-<h1 align="center">Mobile Interview Questions</h1>
-
-<p align="center">
-  <strong>🎯 18 Mobile developer interview questions & answers for iOS, Flutter & React Native</strong>
+<a href="https://github.com/muhittincamdali/mobile-interview-questions/actions/workflows/ci.yml"><img src="https://github.com/muhittincamdali/mobile-interview-questions/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+<a href="https://github.com/muhittincamdali/mobile-interview-questions/releases"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-version-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-version-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-version-light.svg" alt="Latest version: v1.0.0"></picture></a>
+<a href="https://github.com/muhittincamdali/mobile-interview-questions/blob/main/Package.swift"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-platforms-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-platforms-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-platforms-light.svg" alt="Supported platforms: iOS 18+ · macOS 15+"></picture></a>
+<a href="https://github.com/muhittincamdali/mobile-interview-questions/blob/main/Package.swift"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-language-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-language-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-language-light.svg" alt="Language version: Swift 6.2+"></picture></a>
+<a href="https://github.com/muhittincamdali/mobile-interview-questions/blob/main/LICENSE"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-license-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-license-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/badge-license-light.svg" alt="License: MIT"></picture></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/muhittincamdali/mobile-interview-questions?style=flat-square" alt="Stars"/>
-  <img src="https://img.shields.io/github/forks/muhittincamdali/mobile-interview-questions?style=flat-square" alt="Forks"/>
-  <img src="https://img.shields.io/badge/questions-18-blue?style=flat-square" alt="Questions"/>
-  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"/>
+<a href="#quick-start"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/button-start-en-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/button-start-en-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/button-start-en-light.svg" alt="Get started"></picture></a>
+<a href="https://muhittincamdali.github.io/mobile-interview-questions/documentation/interviewbank/"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/button-docs-en-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/button-docs-en-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/button-docs-en-light.svg" alt="Documentation"></picture></a>
+<a href="https://github.com/muhittincamdali/mobile-interview-questions/tree/main/Examples"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/button-examples-en-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/button-examples-en-light.svg"><img src="https://raw.githubusercontent.com/muhittincamdali/mobile-interview-questions/main/.github/brand/button-examples-en-light.svg" alt="Examples"></picture></a>
 </p>
+
+<!-- brand:end -->
+
+Interview questions and answers for mobile developers: iOS, Android, Flutter, React Native,
+mobile system design and behavioral rounds. The bank has 142 questions, each tagged junior, mid
+or senior, and every technical answer links to the primary source it relies on: Apple, Android,
+Flutter, Dart, Kotlin and React Native documentation, Swift Evolution proposals, MDN or an RFC.
+51 answers have code that a test runs in CI, so the claims they make (an actor is reentrant,
+`Int(Double.nan)` traps, a const widget is not rebuilt, `forEach` does not await) are checked
+rather than repeated.
+
+You can read the questions here on GitHub, quiz yourself in the terminal with the `interview`
+command, or study them in the InterviewDeck app for iPhone, iPad and Mac.
+
+## Highlights
+
+- **Current platforms** — the Swift 6 language mode with default main-actor isolation and
+  `@concurrent`, the scene life cycle that apps built with the iOS 27 SDK must adopt, Android 16
+  large-screen and predictive-back changes, Dart 3 patterns and extension types, and the React
+  Native New Architecture.
+- **Answers you can check** — every technical answer cites a primary source, and the linter
+  rejects one that does not.
+- **Tested code** — Swift answers run in Swift Testing on macOS and an iPhone simulator, Dart and
+  Flutter answers in `flutter test` (including widget tests), and JavaScript answers in
+  `node --test`. Each test is named after the question it checks.
+- **A study tool** — `swift run interview quiz` picks random questions by track and level; a seed
+  repeats the same quiz on any machine.
+- **One format, linted** — questions are plain Markdown with a fixed structure, so the same files
+  feed GitHub, the command line, the app and the [InterviewBank](#use-the-library) library.
+
+### What's inside
+
+| Track | Topics | Questions | With tested code |
+| --- | --- | ---: | ---: |
+| [iOS](questions/ios) | Swift language, memory, concurrency, SwiftUI, UIKit and the app life cycle, data and networking, testing and tooling | 58 | 26 |
+| [Android](questions/android) | Kotlin and coroutines, the Android framework and Jetpack | 22 | — |
+| [Flutter](questions/flutter) | Dart language, Flutter framework | 22 | 14 |
+| [React Native](questions/react-native) | JavaScript for React Native, React Native | 22 | 11 |
+| [System design](questions/system-design) | Offline sync, feeds, images, chat, push, OAuth, rollouts, API evolution, retries | 10 | — |
+| [Behavioral](questions/behavioral) | STAR, incidents, disagreements, technical debt, mentoring | 8 | — |
+
+The Android snippets are not compiled: CI has no Kotlin toolchain for them, so those answers rely
+on their linked documentation. The full list of topic files is in
+[questions/README.md](questions/README.md).
+
+## Quick start
+
+**1. Get the questions**
+
+```sh
+git clone https://github.com/muhittincamdali/mobile-interview-questions.git
+cd mobile-interview-questions
+```
+
+You need Swift 6.2 or later: Xcode 26 or later on a Mac, or a [Swift toolchain](https://www.swift.org/install/)
+on Linux. Only reading the Markdown files needs nothing at all.
+
+**2. Run a quiz**
+
+```sh
+swift run interview quiz --track ios --level senior --count 3
+```
+
+The first run builds the tool. It prints three questions and the seed it used:
+
+```console
+$ swift run interview quiz --track ios --level senior --count 3 --seed 7
+Quiz: 3 of 12 questions · seed 7
+
+1. [IOS-021 · senior · Memory management] Is `autoreleasepool` still useful in Swift?
+2. [IOS-029 · senior · Swift concurrency] Where does a `nonisolated async` function run, and what do `nonisolated(nonsending)` and `@concurrent` mean?
+3. [IOS-047 · senior · UIKit and the app life cycle] How do you run work in the background on iOS?
+
+Answers: interview show <ID>, or repeat with --seed 7 --answers
+```
+
+**3. Check your answer**
+
+```sh
+swift run interview show IOS-026
+```
+
+This prints the answer, its references, and the test that checks its code
+([ConcurrencyTests.swift](Tests/AnswerTests/ConcurrencyTests.swift) for IOS-026). Add `--answers`
+to a quiz with the same seed to print all of them at once.
+
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| `interview list --track flutter --level mid` | Lists questions; also `--topic "Swift concurrency"` and `--search actor` |
+| `interview show RN-012` | One question with its answer, references and test |
+| `interview quiz --count 10 --seed 42 --answers` | A repeatable quiz of 1 to 50 questions |
+| `interview stats` | Questions per track and level |
+| `interview lint` | Checks the question files; exit status 1 on any problem |
+
+Run `swift run interview --help` for the full list. Invalid input, such as `--count 0`,
+`--count 1e3` or an unknown track, is reported with exit status 2 instead of crashing.
+
+## Example: a verified answer
+
+Each question is a Markdown section with an ID, a level, the answer and its sources. This is the
+start of IOS-012 in [questions/ios/swift-language.md](questions/ios/swift-language.md):
+
+```markdown
+## IOS-012: How do you convert a `Double` to an `Int` without crashing?
+
+**Level:** mid · **Verified by:** [SwiftLanguageTests](../../Tests/AnswerTests/SwiftLanguageTests.swift)
+
+`Int(someDouble)` truncates toward zero, and it **traps** (crashes) when the value is NaN,
+infinite or outside `Int`'s range. ...
+```
+
+The linked test runs every conversion in the answer and fails if one behaves differently:
+
+```swift
+@Test("IOS-012: Int(exactly:) returns nil where Int(_:) would trap")
+func safeNumericConversion() throws {
+    #expect(Int(exactly: 42.0) == 42)
+    #expect(Int(exactly: 3.5) == nil)
+    #expect(Int(exactly: Double.nan) == nil)
+    let huge = try #require(Double("1e300"), "read at run time, like a value from JSON")
+    #expect(Int(exactly: huge) == nil)
+    #expect(Int(3.9) == 3, "Int(_:) truncates toward zero")
+    // ...
+}
+```
+
+Writing these tests corrected drafts before they were published: for example, `Int(1e300)` with
+a literal does not compile at all, so the answer now shows the trap with a value known only at run
+time.
+
+## The study app
+
+[InterviewDeck](Examples) is a SwiftUI app for iPhone, iPad and Mac built on the same files: browse
+and search the bank, read answers with their code, tables and references, and run quizzes by track
+and level.
 
 <p align="center">
-  <a href="#ios">iOS</a> •
-  <a href="#swift">Swift</a> •
-  <a href="#flutter">Flutter</a> •
-  <a href="#react-native">React Native</a> •
-  <a href="#system-design">System Design</a>
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/deck-browse-dark.png"><img src="docs/images/deck-browse-light.png" alt="InterviewDeck question list: 142 questions in six tracks" width="260"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/deck-question-dark.png"><img src="docs/images/deck-question-light.png" alt="InterviewDeck showing question IOS-026 about actor reentrancy, with its code sample" width="260"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/deck-quiz-dark.png"><img src="docs/images/deck-quiz-light.png" alt="InterviewDeck quiz card for a senior iOS question with the answer shown" width="260"></picture>
 </p>
 
----
+Open `Examples/InterviewDeck/InterviewDeck.xcodeproj` in Xcode 26 or later, choose the
+**InterviewDeck** scheme and an iPhone simulator or **My Mac**, and press **Run**. The screenshots
+are taken from the app on an iOS 27 simulator by
+[`scripts/capture-screens.sh`](scripts/capture-screens.sh).
 
-## 📋 Table of Contents
+## Use the library
 
-- [iOS & Swift](#ios--swift)
-  - [Swift Fundamentals](#swift-fundamentals)
-  - [Memory Management](#memory-management)
-  - [Concurrency](#concurrency)
-  - [SwiftUI](#swiftui)
-  - [UIKit](#uikit)
-  - [Networking](#networking)
-  - [Core Data](#core-data)
-  - [Testing](#testing)
-- [Flutter & Dart](#flutter--dart)
-- [React Native](#react-native)
-- [System Design](#system-design)
-- [Behavioral](#behavioral)
-- [Coding Challenges](#coding-challenges)
-- [Contributing](#contributing)
-- [License](#license)
-- [Star History](#-star-history)
-
----
-
-## iOS & Swift
-
-### Swift Fundamentals
-
-<details>
-<summary><b>What is the difference between `let` and `var`?</b></summary>
-
-- `let` declares a constant (immutable)
-- `var` declares a variable (mutable)
+The `InterviewBank` library reads, lints, filters and quizzes the question files from your own
+Swift code. Add it with Swift Package Manager:
 
 ```swift
-let constant = "Cannot change"
-var variable = "Can change"
-variable = "Changed!"
+dependencies: [
+    .package(url: "https://github.com/muhittincamdali/mobile-interview-questions.git", from: "2.0.0")
+],
+targets: [
+    .target(name: "MyStudyTool", dependencies: [
+        .product(name: "InterviewBank", package: "mobile-interview-questions")
+    ])
+]
 ```
-
-**Follow-up:** Can you modify properties of a `let` class instance?
-- Yes, because `let` means the reference is constant, not the object itself.
-</details>
-
-<details>
-<summary><b>What is the difference between `struct` and `class`?</b></summary>
-
-| Feature | Struct | Class |
-|---------|--------|-------|
-| Type | Value | Reference |
-| Inheritance | ❌ | ✅ |
-| Default init | ✅ memberwise | ❌ |
-| ARC | ❌ | ✅ |
-| Mutating | Need `mutating` | Not needed |
-
-**When to use struct:**
-- Data containers
-- Immutability preferred
-- No inheritance needed
-- Thread safety important
-
-**When to use class:**
-- Identity matters
-- Inheritance needed
-- Reference semantics needed
-</details>
-
-<details>
-<summary><b>Explain optionals and unwrapping methods</b></summary>
 
 ```swift
-var name: String? = "John"
+import Foundation
+import InterviewBank
 
-// 1. Force unwrap (dangerous)
-let unwrapped = name!
-
-// 2. Optional binding
-if let safeName = name {
-    print(safeName)
-}
-
-// 3. Guard
-guard let safeName = name else { return }
-
-// 4. Nil coalescing
-let result = name ?? "Default"
-
-// 5. Optional chaining
-let length = name?.count
-```
-</details>
-
-<details>
-<summary><b>What are property wrappers?</b></summary>
-
-Property wrappers add custom behavior to properties:
-
-```swift
-@propertyWrapper
-struct Clamped<Value: Comparable> {
-    var wrappedValue: Value {
-        didSet { wrappedValue = min(max(wrappedValue, range.lowerBound), range.upperBound) }
-    }
-    let range: ClosedRange<Value>
-}
-
-struct Player {
-    @Clamped(range: 0...100) var health: Int = 100
+let bank = try QuestionBank.load(from: URL(fileURLWithPath: "questions"))
+let pool = bank.filter(QuestionFilter(track: .flutter, level: .mid))
+for question in Quiz.pick(5, from: pool, seed: 2026) {
+    print(question.id, question.title)
 }
 ```
 
-Common wrappers: `@State`, `@Published`, `@AppStorage`
-</details>
-
-<details>
-<summary><b>Explain protocol-oriented programming</b></summary>
-
-```swift
-protocol Drawable {
-    func draw()
-}
-
-extension Drawable {
-    func draw() { print("Default drawing") }
-}
-
-struct Circle: Drawable {
-    func draw() { print("Drawing circle") }
-}
-
-// Protocol composition
-typealias Displayable = Drawable & CustomStringConvertible
-```
-
-**Benefits:**
-- Composition over inheritance
-- Value type support
-- Default implementations
-- Multiple conformance
-</details>
-
-### Memory Management
-
-<details>
-<summary><b>Explain ARC (Automatic Reference Counting)</b></summary>
-
-ARC automatically manages memory by tracking reference counts:
-
-```swift
-class Person {
-    let name: String
-    init(name: String) { self.name = name }
-    deinit { print("\(name) deinitialized") }
-}
-
-var person1: Person? = Person(name: "John") // RC = 1
-var person2 = person1 // RC = 2
-person1 = nil // RC = 1
-person2 = nil // RC = 0 -> deinit called
-```
-</details>
-
-<details>
-<summary><b>What are strong, weak, and unowned references?</b></summary>
-
-```swift
-class Parent {
-    var child: Child?
-}
-
-class Child {
-    weak var parent: Parent? // Prevents retain cycle
-    unowned let owner: Parent // Non-optional, assumes always valid
-}
-```
-
-| Type | Reference Count | Optional | Use Case |
-|------|-----------------|----------|----------|
-| strong | +1 | N/A | Default |
-| weak | 0 | Yes | Delegates, parent refs |
-| unowned | 0 | No | Known valid lifetime |
-</details>
-
-<details>
-<summary><b>How do you avoid retain cycles in closures?</b></summary>
-
-```swift
-class ViewModel {
-    var data: String = ""
-    
-    func load() {
-        // ❌ Retain cycle
-        networkCall { self.data = $0 }
-        
-        // ✅ Weak self
-        networkCall { [weak self] result in
-            self?.data = result
-        }
-        
-        // ✅ Unowned (if guaranteed valid)
-        networkCall { [unowned self] result in
-            self.data = result
-        }
-    }
-}
-```
-</details>
-
-### Concurrency
-
-<details>
-<summary><b>Explain async/await in Swift</b></summary>
-
-```swift
-// Async function
-func fetchUser() async throws -> User {
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try JSONDecoder().decode(User.self, from: data)
-}
-
-// Calling async function
-Task {
-    do {
-        let user = try await fetchUser()
-        // Use user
-    } catch {
-        // Handle error
-    }
-}
-```
-</details>
-
-<details>
-<summary><b>What is an actor?</b></summary>
-
-Actors provide data isolation for safe concurrent access:
-
-```swift
-actor BankAccount {
-    private var balance: Double = 0
-    
-    func deposit(_ amount: Double) {
-        balance += amount
-    }
-    
-    func withdraw(_ amount: Double) -> Bool {
-        guard balance >= amount else { return false }
-        balance -= amount
-        return true
-    }
-}
-
-// Usage (must await)
-let account = BankAccount()
-await account.deposit(100)
-```
-</details>
-
-<details>
-<summary><b>Explain @MainActor</b></summary>
-
-```swift
-@MainActor
-class ViewModel: ObservableObject {
-    @Published var data: [Item] = []
-    
-    func load() async {
-        // This runs on main thread automatically
-        data = await fetchData()
-    }
-}
-
-// Or for specific code
-await MainActor.run {
-    self.updateUI()
-}
-```
-</details>
-
-### SwiftUI
-
-<details>
-<summary><b>What is the difference between @State, @Binding, @StateObject, @ObservedObject?</b></summary>
-
-| Wrapper | Ownership | Type | Use |
-|---------|-----------|------|-----|
-| @State | View owns | Value | Simple local state |
-| @Binding | Reference | Value | Pass state down |
-| @StateObject | View creates | Reference | Create ObservableObject |
-| @ObservedObject | External | Reference | Injected ObservableObject |
-
-```swift
-struct ParentView: View {
-    @State private var count = 0  // Owns the state
-    @StateObject var viewModel = ViewModel()  // Creates and owns
-    
-    var body: some View {
-        ChildView(count: $count)  // Passes binding
-    }
-}
-
-struct ChildView: View {
-    @Binding var count: Int  // References parent's state
-    @ObservedObject var vm: ViewModel  // Doesn't own
-}
-```
-</details>
-
-### Networking
-
-<details>
-<summary><b>How do you make network requests in iOS?</b></summary>
-
-```swift
-// Modern async/await approach
-func fetchUsers() async throws -> [User] {
-    let url = URL(string: "https://api.example.com/users")!
-    let (data, response) = try await URLSession.shared.data(from: url)
-    
-    guard let httpResponse = response as? HTTPURLResponse,
-          httpResponse.statusCode == 200 else {
-        throw NetworkError.invalidResponse
-    }
-    
-    return try JSONDecoder().decode([User].self, from: data)
-}
-```
-</details>
-
----
-
-## Flutter & Dart
-
-<details>
-<summary><b>What is the difference between StatelessWidget and StatefulWidget?</b></summary>
-
-```dart
-// Immutable - rebuild with new data
-class Greeting extends StatelessWidget {
-  final String name;
-  const Greeting({required this.name});
-  
-  @override
-  Widget build(BuildContext context) => Text('Hello $name');
-}
-
-// Mutable - internal state
-class Counter extends StatefulWidget {
-  @override
-  State<Counter> createState() => _CounterState();
-}
-
-class _CounterState extends State<Counter> {
-  int count = 0;
-  
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () => setState(() => count++),
-      child: Text('Count: $count'),
-    );
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Explain Flutter's widget lifecycle</b></summary>
-
-```dart
-class MyWidget extends StatefulWidget {
-  @override
-  State<MyWidget> createState() => _MyWidgetState();
-}
-
-class _MyWidgetState extends State<MyWidget> {
-  @override
-  void initState() {
-    super.initState();  // Called once
-  }
-  
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();  // After initState, on dependency change
-  }
-  
-  @override
-  void didUpdateWidget(MyWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);  // Parent rebuilds
-  }
-  
-  @override
-  void dispose() {
-    super.dispose();  // Cleanup
-  }
-}
-```
-</details>
-
----
-
-## Elite 2026 Concurrency
-
-<details>
-<summary><b>What is Data Isolation in Swift 6 and why does it matter?</b></summary>
-Swift 6 introduces static analysis of data races. By using `Sendable` and `Actors`, the compiler guarantees that multiple threads cannot access mutable state simultaneously. This eliminates the #1 source of crashes in mobile apps.
-</details>
-
-<details>
-<summary><b>Explain the difference between @MainActor and a custom Actor.</b></summary>
-`@MainActor` is a global actor that ensures code always runs on the main thread (essential for UI). A custom `actor` defines its own serial executor, allowing safe concurrent work off the main thread without manual lock management.
-</details>
-
-<details>
-<summary><b>Why is 'Zero-Dependency' networking preferred over Alamofire in 2026?</b></summary>
-Native `URLSession` with `async/await` and world-class wrappers like **[SwiftNetwork](https://github.com/muhittincamdali/SwiftNetwork)** provide 6.7x faster parsing (via SIMD) and zero binary bloat (saving ~10MB+ in binary size), while maintaining strict Swift 6 concurrency safety.
-</details>
-
----
-
-## System Design
-
-<details>
-<summary><b>Design a social media feed (like Instagram)</b></summary>
-
-### Requirements
-- Infinite scrolling feed
-- Image/video posts
-- Likes, comments
-- Real-time updates
-
-### Architecture
-
-```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Feed API  │───►│  CDN/Cache  │───►│   Client    │
-└─────────────┘    └─────────────┘    └─────────────┘
-       │
-       ▼
-┌─────────────┐    ┌─────────────┐
-│  Database   │───►│  Search/ML  │
-└─────────────┘    └─────────────┘
-```
-
-### Key Decisions
-- Pagination: Cursor-based (not offset)
-- Caching: In-memory + disk
-- Images: Progressive loading, CDN
-- Real-time: WebSocket for updates
-</details>
-
----
-
-## Coding Challenges
-
-<details>
-<summary><b>Reverse a linked list</b></summary>
-
-```swift
-func reverseList(_ head: ListNode?) -> ListNode? {
-    var prev: ListNode? = nil
-    var current = head
-    
-    while current != nil {
-        let next = current?.next
-        current?.next = prev
-        prev = current
-        current = next
-    }
-    
-    return prev
-}
-```
-</details>
-
-<details>
-<summary><b>Check if a string is a palindrome</b></summary>
-
-```swift
-func isPalindrome(_ s: String) -> Bool {
-    let chars = s.lowercased().filter { $0.isLetter || $0.isNumber }
-    return chars == String(chars.reversed())
-}
-```
-</details>
-
----
-
-## Study Plan
-
-### Week 1-2: Fundamentals
-- [ ] Swift/Dart basics
-- [ ] Memory management
-- [ ] Data structures
-
-### Week 3-4: Platform
-- [ ] UIKit/SwiftUI or Flutter widgets
-- [ ] Networking
-- [ ] Persistence
-
-### Week 5-6: Advanced
-- [ ] Architecture patterns
-- [ ] System design
-- [ ] Performance
-
-### Week 7-8: Practice
-- [ ] LeetCode (2/day)
-- [ ] Mock interviews
-- [ ] Project review
-
----
+Reading is bounded (1 MiB per file, 256 files, 500 questions and 100 reported problems per file), and every format problem
+comes back as a `Diagnostic` with a file and line instead of an exception.
+
+## Documentation
+
+The [InterviewBank documentation](https://muhittincamdali.github.io/mobile-interview-questions/documentation/interviewbank/)
+covers the API and three articles:
+
+- [Getting Started](https://muhittincamdali.github.io/mobile-interview-questions/documentation/interviewbank/gettingstarted) — the commands and adding the library
+- [Writing Questions](https://muhittincamdali.github.io/mobile-interview-questions/documentation/interviewbank/writingquestions) — the file format, the lint rules and how to verify an answer
+- [Building a Study App](https://muhittincamdali.github.io/mobile-interview-questions/documentation/interviewbank/buildingastudyapp) — bundling the questions and rendering answers
+
+## Requirements
+
+| Use | Needs |
+| --- | --- |
+| Reading the questions | A browser or any Markdown viewer |
+| `interview` command | Swift 6.2 or later (Xcode 26+ on macOS, or a Swift toolchain on Linux) |
+| `InterviewBank` library | Swift 6.2+, iOS 18+ or macOS 15+ |
+| InterviewDeck app | Xcode 26+, iOS 18+ or macOS 15+ |
+| Flutter answer tests | Flutter 3.41 or later (`cd answers/flutter && flutter test`) |
+| JavaScript answer tests | Node.js 22 or later (`cd answers/react-native && npm test`) |
 
 ## Contributing
 
-Add questions via PR! See [CONTRIBUTING.md](CONTRIBUTING.md).
+Corrections and new questions are welcome. Read the [contributing guide](CONTRIBUTING.md) for the
+format, the lint rules and how to add a test for an answer, and the [code of conduct](https://github.com/muhittincamdali/.github/blob/main/CODE_OF_CONDUCT.md)
+before opening a pull request. Report security issues privately as described in the
+[security policy](https://github.com/muhittincamdali/.github/blob/main/SECURITY.md).
 
 ## License
 
-MIT License
-
----
-
-<p align="center">
-  <sub>Good luck with your interviews! 🍀</sub>
-</p>
-
----
-
-## 📈 Star History
-
-<a href="https://star-history.com/#muhittincamdali/mobile-interview-questions&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=muhittincamdali/mobile-interview-questions&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=muhittincamdali/mobile-interview-questions&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=muhittincamdali/mobile-interview-questions&type=Date" />
- </picture>
-</a>
-
-## 🚀 Killer Feature: The 2026 Standard
-This repository has been upgraded to the absolute global #1 standard in its category.
+Released under the MIT license. See [LICENSE](LICENSE).
