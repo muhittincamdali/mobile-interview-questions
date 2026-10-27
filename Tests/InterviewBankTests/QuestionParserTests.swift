@@ -144,5 +144,8 @@ struct QuestionParserTests {
     @Test func findsLinkTargetsInALine() {
         #expect(QuestionParser.linkTargets("[a](x) and [b](y) · [c](z") == ["x", "y"])
         #expect(QuestionParser.linkTargets("no links") == [])
+        #expect(QuestionParser.linkTargets("[init](https://a.example/int/init(exactly:)) · [b](y)") == ["https://a.example/int/init(exactly:)", "y"])
+        #expect(QuestionParser.linkTargets("[task](<https://a.example/task(id:_:)>) and [c](z)") == ["https://a.example/task(id:_:)", "z"])
+        #expect(QuestionParser.linkTargets("[open](<https://a.example/no-close") == [])
     }
 }

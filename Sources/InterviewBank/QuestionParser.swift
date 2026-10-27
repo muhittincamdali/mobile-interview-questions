@@ -117,15 +117,34 @@ public enum QuestionParser {
             && digits.allSatisfy { $0.isASCII && $0.isNumber }
     }
 
-    /// The URLs of the Markdown links in a line: `[text](url)`.
+    /// The destinations of the Markdown links in a line: `[text](url)`, `[text](<url>)`, and
+    /// URLs with balanced parentheses such as `.../init(exactly:)`.
     static func linkTargets(_ line: Substring) -> [String] {
         var targets: [String] = []
         var rest = line[...]
         while let open = rest.range(of: "](") {
-            let after = rest[open.upperBound...]
-            guard let close = after.firstIndex(of: ")") else { break }
-            targets.append(String(after[..<close]))
-            rest = after[after.index(after: close)...]
+            var cursor = open.upperBound
+            if cursor < rest.endIndex, rest[cursor] == "<" {
+                let start = rest.index(after: cursor)
+                guard let close = rest[start...].firstIndex(of: ">") else { break }
+                targets.append(String(rest[start..<close]))
+                rest = rest[rest.index(after: close)...]
+                continue
+            }
+            var depth = 0
+            var end: Substring.Index?
+            while cursor < rest.endIndex {
+                let character = rest[cursor]
+                if character == "(" { depth += 1 }
+                if character == ")" {
+                    if depth == 0 { end = cursor; break }
+                    depth -= 1
+                }
+                cursor = rest.index(after: cursor)
+            }
+            guard let end else { break }
+            targets.append(String(rest[open.upperBound..<end]))
+            rest = rest[rest.index(after: end)...]
         }
         return targets
     }
