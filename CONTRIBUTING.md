@@ -1,80 +1,77 @@
-# Contributing to SwiftRouter
+# Contributing
 
-First off, thank you for considering contributing to SwiftRouter! It's people like you that make SwiftRouter such a great tool.
+Thanks for helping to keep these questions correct and current. Corrections are as valuable as
+new questions: an outdated answer does more harm in an interview than a missing one.
 
-## Code of Conduct
+## Reporting a wrong or outdated answer
 
-This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code.
+Open an issue with the **Answer correction** template and include:
 
-## How Can I Contribute?
+- the question ID (for example `IOS-026`),
+- what is wrong, and a primary source that shows it: Apple, Android, Flutter, Dart, Kotlin or
+  React Native documentation, a Swift Evolution proposal, MDN or an RFC,
+- for version-specific behaviour, the OS, SDK or framework version it applies to.
 
-### Reporting Bugs
+## Adding or changing a question
 
-Before creating bug reports, please check the existing issues as you might find out that you don't need to create one. When you are creating a bug report, please include as many details as possible:
+1. Fork the repository and branch from `main`. Keep each pull request to one topic.
+2. Edit or add the question in `questions/<track>/<topic>.md`. The format is described in
+   [questions/README.md](questions/README.md) and in the
+   [Writing Questions](Sources/InterviewBank/InterviewBank.docc/WritingQuestions.md) article:
+    - use the next free ID of the track and never renumber published IDs,
+    - give a level (`junior`, `mid` or `senior`),
+    - cite at least one primary source with a `**Reference:**` line (not needed in the behavioral
+      track),
+    - keep answers short enough to say in an interview, and explain trade-offs, not only facts.
+3. If the answer contains code that can run without a device, add a test that checks the claim,
+   named after the question ID, and link it with `**Verified by:**`:
 
-- **Use a clear and descriptive title**
-- **Describe the exact steps which reproduce the problem**
-- **Provide specific examples to demonstrate the steps**
-- **Describe the behavior you observed after following the steps**
-- **Explain which behavior you expected to see instead and why**
-- **Include Swift version and OS version**
+    | Code             | Test folder                 | Run                                   |
+    | ---------------- | --------------------------- | ------------------------------------- |
+    | Swift            | `Tests/AnswerTests`         | `swift test`                          |
+    | Dart and Flutter | `answers/flutter/test`      | `cd answers/flutter && flutter test`  |
+    | JavaScript       | `answers/react-native/test` | `cd answers/react-native && npm test` |
 
-### Suggesting Enhancements
+    The test should fail if the answer is wrong, including the edge case the answer warns about.
 
-Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, please include:
+4. Update the question count of the file in [questions/README.md](questions/README.md), and the
+   totals in the README if they change; `swift test` checks both.
+5. Run the checks:
 
-- **Use a clear and descriptive title**
-- **Provide a step-by-step description of the suggested enhancement**
-- **Provide specific examples to demonstrate the steps**
-- **Describe the current behavior and explain which behavior you expected to see instead**
-- **Explain why this enhancement would be useful**
+    ```sh
+    swift run interview lint
+    swift test
+    ```
 
-### Pull Requests
+    For changes to the example app, also build it:
 
-1. Fork the repo and create your branch from `main`
-2. If you've added code that should be tested, add tests
-3. If you've changed APIs, update the documentation
-4. Ensure the test suite passes
-5. Make sure your code follows the existing style (SwiftLint)
-6. Issue that pull request!
+    ```sh
+    cd Examples/InterviewDeck
+    xcodebuild build -scheme InterviewDeck -destination 'generic/platform=iOS Simulator'
+    ```
 
-## Development Setup
+6. If the app's screens change, regenerate the screenshots with `scripts/capture-screens.sh`.
+7. `README.md` will have translations (`README.<language>.md`), each recording the version of
+   `README.md` it follows; CI fails while a translation is behind. If you change `README.md` and
+   cannot update the translations, say so in the pull request.
 
-```bash
-# Clone your fork
-git clone https://github.com/YOUR_USERNAME/SwiftRouter.git
+## Code style
 
-# Navigate to the project
-cd SwiftRouter
+- Swift follows the [Swift API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/)
+  and builds in the Swift 6 language mode without warnings. Document public API with DocC
+  comments (`///`).
+- Dart passes `dart format` and `flutter analyze`; JavaScript is plain ES modules without
+  dependencies.
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
+  (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `ci:`, `chore:`).
 
-# Open in Xcode
-open Package.swift
+## Conduct and security
 
-# Run tests
-swift test
-```
-
-## Style Guide
-
-- Follow [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
-- Use SwiftLint for code style consistency
-- Write meaningful commit messages following [Conventional Commits](https://www.conventionalcommits.org/)
-- Document public APIs with DocC-compatible comments
-
-## Commit Messages
-
-We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
-
-- `feat:` A new feature
-- `fix:` A bug fix
-- `docs:` Documentation only changes
-- `style:` Code style changes (formatting, semicolons, etc)
-- `refactor:` Code change that neither fixes a bug nor adds a feature
-- `test:` Adding missing tests
-- `chore:` Changes to the build process or auxiliary tools
-
-Example: `feat(deeplink): add universal link support`
+This project follows the [code of conduct](https://github.com/muhittincamdali/.github/blob/main/CODE_OF_CONDUCT.md)
+of all `muhittincamdali` repositories; it lists a private address for reports. Report security
+issues privately as described in the [security policy](https://github.com/muhittincamdali/.github/blob/main/SECURITY.md),
+not in a public issue.
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing you agree that your contributions are licensed under the MIT License.
