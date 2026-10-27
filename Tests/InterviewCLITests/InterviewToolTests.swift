@@ -106,6 +106,21 @@ struct InterviewToolTests {
         #expect(shown.hasPrefix("IOS-003: Set the ]0;titletitle?\niOS · Ter[2Jminal · mid\n\nClear[H2J it.\tTab stays.\n"))
     }
 
+    /// U+202E (right-to-left override) and the isolates U+2066–U+2069 reorder the text that
+    /// follows them, so `lint` or `show` could print a line that reads differently from its bytes.
+    @Test func stripsBidirectionalControlsFromQuestionText() throws {
+        let controls = "\u{202A}\u{202B}\u{202C}\u{202D}\u{202E}\u{2066}\u{2067}\u{2068}\u{2069}\u{200E}\u{200F}\u{061C}"
+        let hostile = "# Spo\u{202E}of\n\n## IOS-003: Is \u{2067}this\u{2069} safe?\n\n**Level:** mid\n\nA\(controls)nswer, café 👩‍💻.\n\n**Reference:** [R](https://a.example/r)"
+        let fixture = try Fixture(extra: ["questions/ios/hostile.md": hostile])
+        for arguments in [["show", "IOS-003"], ["list", "--search", "safe"], ["lint"]] {
+            let output = fixture.run(arguments)
+            let printed = output.standardOutput + output.standardError
+            #expect(!printed.unicodeScalars.contains { $0.properties.isBidiControl }, "\(arguments)")
+        }
+        let shown = fixture.run(["show", "IOS-003"]).standardOutput
+        #expect(shown.hasPrefix("IOS-003: Is this safe?\niOS · Spoof · mid\n\nAnswer, café 👩‍💻.\n"), "letters, accents and emoji joiners stay")
+    }
+
     @Test func showReportsAnUnknownID() throws {
         let output = try Fixture().run(["show", "IOS-999"])
         #expect(output.status == 1)

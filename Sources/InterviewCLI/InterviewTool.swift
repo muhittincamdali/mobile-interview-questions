@@ -159,9 +159,12 @@ struct Printer {
 
     /// Removes control characters (C0, DEL and C1, which include ESC and CSI) except line feed and
     /// tab, so printed text cannot move the cursor, clear the screen or set the window title.
+    /// Bidirectional controls (U+202A–U+202E, U+2066–U+2069, U+200E, U+200F, U+061C) are removed
+    /// too: they reorder the text around them, so a line could show something other than it says.
     static func terminalSafe(_ text: String) -> String {
         let isUnsafe: (Unicode.Scalar) -> Bool = { scalar in
-            scalar.properties.generalCategory == .control && scalar != "\n" && scalar != "\t"
+            if scalar.properties.isBidiControl { return true }
+            return scalar.properties.generalCategory == .control && scalar != "\n" && scalar != "\t"
         }
         guard text.unicodeScalars.contains(where: isUnsafe) else { return text }
         var scalars = String.UnicodeScalarView()
