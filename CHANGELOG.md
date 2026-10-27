@@ -21,13 +21,13 @@ The question collection is rewritten as a checked, tested bank with tools to stu
   question it checks.
 - `InterviewBank` library: a parser that reports problems with file and line, bounded loading
   (1 MiB per file, 256 files, 500 questions and 100 reported problems per file, topics of at
-  most 100 characters), a linter, filtering and search, seeded quizzes and `AnswerBlock` for
+  most 100 Unicode scalars), a linter, filtering and search, seeded quizzes and `AnswerBlock` for
   rendering prose, code and tables.
   Short table rows get at most as many empty cells as the table writes; a table that needs
   more stays prose, so the blocks grow linearly with the answer.
 - `interview` command: `list`, `show`, `quiz`, `stats` and `lint`, with validated options and
   table columns padded to at most 40 characters. Output is written while it is made, not
-  collected first.
+  collected first; standard error is written line by line.
 - InterviewDeck, an example SwiftUI app for iOS and macOS that bundles the questions.
 - DocC documentation with three articles, published to GitHub Pages.
 - README translations in nine languages: Turkish, Simplified Chinese, Japanese, Korean, Spanish,
