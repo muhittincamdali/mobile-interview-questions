@@ -27,13 +27,16 @@ public struct BankLinter: Sendable {
         // A file's count starts at what the loader reported for it, so loader and linter share
         // one limit per file.
         var reported = Dictionary(bank.diagnostics.map { ($0.location.file, 1) }, uniquingKeysWith: +)
+        // A negative limit counts as 0, as in the parser: compared as it was, it matched neither
+        // branch below and hid every content problem without the line that says so.
+        let limit = max(limits.maxDiagnosticsPerFile, 0)
         func report(_ message: String, at location: SourceLocation) {
             let count = reported[location.file, default: 0]
             reported[location.file] = count + 1
-            if count < limits.maxDiagnosticsPerFile {
+            if count < limit {
                 diagnostics.append(Diagnostic(message, at: location))
-            } else if count == limits.maxDiagnosticsPerFile {
-                diagnostics.append(DiagnosticLog.overflow(limit: limits.maxDiagnosticsPerFile, at: location))
+            } else if count == limit {
+                diagnostics.append(DiagnosticLog.overflow(limit: limit, at: location))
             }
         }
         var firstUse: [String: SourceLocation] = [:]

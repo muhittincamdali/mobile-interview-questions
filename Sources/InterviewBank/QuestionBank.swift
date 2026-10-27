@@ -10,7 +10,8 @@ public struct BankLimits: Sendable, Equatable {
     /// Most questions read from one file.
     public var maxQuestionsPerFile: Int
     /// Most problems reported for one file; one more line says that the rest were not reported.
-    /// Without it, a 1 MiB file of repeated `# a` lines produced 262,144 diagnostics.
+    /// Without it, a 1 MiB file of repeated `# a` lines produced 262,144 diagnostics. A negative
+    /// value counts as 0: the first problem of a file is then that line.
     public var maxDiagnosticsPerFile: Int
 
     public init(maxFileBytes: Int, maxFiles: Int, maxQuestionsPerFile: Int, maxDiagnosticsPerFile: Int = 100) {

@@ -114,4 +114,17 @@ struct BankLinterTests {
         #expect(diagnostics.last { $0.location.file == "ios/a.md" }?.message == "more than 4 problems in this file; the rest were not reported")
         #expect(diagnostics.filter { $0.location.file == "ios/b.md" }.map(\.message) == ["IOS-001 has no answer"])
     }
+
+    @Test(arguments: [0, -1])
+    func reportsThatProblemsWereHiddenWhenTheLimitIsZeroOrNegative(limit: Int) throws {
+        let folder = try TemporaryFolder()
+        try folder.write("questions/ios/a.md", "# A\n\n" + TemporaryFolder.question("IOS-001", answer: " "))
+        let questionsFolder = folder.url.appendingPathComponent("questions")
+        let limits = BankLimits(maxFileBytes: 1 << 20, maxFiles: 10, maxQuestionsPerFile: 50, maxDiagnosticsPerFile: limit)
+        let bank = try QuestionBank.load(from: questionsFolder, limits: limits)
+
+        let diagnostics = BankLinter(questionsFolder: questionsFolder, repositoryRoot: folder.url, limits: limits).lint(bank)
+
+        #expect(diagnostics.map(\.message) == ["more than 0 problems in this file; the rest were not reported"])
+    }
 }
