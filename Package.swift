@@ -16,6 +16,9 @@ let package = Package(
         .target(name: "InterviewCLI", dependencies: ["InterviewBank"]),
         .executableTarget(name: "interview", dependencies: ["InterviewCLI"]),
         .testTarget(name: "InterviewBankTests", dependencies: ["InterviewBank"]),
-        .testTarget(name: "InterviewCLITests", dependencies: ["InterviewCLI"])
+        .testTarget(name: "InterviewCLITests", dependencies: ["InterviewCLI"]),
+        // The Swift answers in questions/ios are checked here: each test is named after the
+        // question it verifies, and the linter requires that name in the linked file.
+        .testTarget(name: "AnswerTests")
     ]
 )
