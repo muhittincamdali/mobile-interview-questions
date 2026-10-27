@@ -83,7 +83,15 @@ struct InterviewToolTests {
         let output = try Fixture().run(["show", "ios-001"])
         #expect(output.status == 0)
         #expect(output.standardOutput.hasPrefix("IOS-001: What is a struct?\niOS · Swift language · junior\n\nA value type.\n"))
-        #expect(output.standardOutput.contains("References:\n  https://docs.swift.org/swift-book/\nVerified by: ../../Tests/T.swift"))
+        #expect(output.standardOutput.contains("References:\n  https://docs.swift.org/swift-book/\nVerified by: Tests/T.swift"))
+    }
+
+    @Test func printsTheVerifiedByPathFromTheCurrentDirectory() throws {
+        let fixture = try Fixture()
+        let inQuestions = InterviewTool(currentDirectory: fixture.root.appendingPathComponent("questions"))
+        let outside = inQuestions.run(["show", "IOS-001", "--bank", "."]).standardOutput
+        let testFile = fixture.root.appendingPathComponent("Tests/T.swift").standardizedFileURL.path
+        #expect(outside.contains("Verified by: \(testFile)\n"), "a test outside the current directory is printed in full")
     }
 
     @Test func stripsTerminalControlCharactersFromQuestionText() throws {

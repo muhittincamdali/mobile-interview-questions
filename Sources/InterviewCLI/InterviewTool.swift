@@ -83,10 +83,10 @@ public struct InterviewTool: Sendable {
                 printer.error("No question with the ID `\(arguments.questionID ?? "")`. Run `interview list` to see the IDs.")
                 return 1
             }
-            printer.question(question, withAnswer: true)
+            printer.question(question, verifiedBy: verificationPath(of: question, folder: folder))
             return 0
         case .quiz:
-            return quiz(arguments, bank: bank, printer: &printer)
+            return quiz(arguments, bank: bank, folder: folder, printer: &printer)
         case .stats:
             printer.stats(bank.filter(arguments.filter))
             return 0
@@ -100,7 +100,7 @@ public struct InterviewTool: Sendable {
         }
     }
 
-    private func quiz(_ arguments: Arguments, bank: QuestionBank, printer: inout Printer) -> Int32 {
+    private func quiz(_ arguments: Arguments, bank: QuestionBank, folder: URL, printer: inout Printer) -> Int32 {
         let pool = bank.filter(arguments.filter)
         guard !pool.isEmpty else {
             printer.error("No questions match these filters.")
@@ -115,12 +115,29 @@ public struct InterviewTool: Sendable {
         if arguments.showAnswers {
             for question in picked {
                 printer.line("\n" + String(repeating: "─", count: 60))
-                printer.question(question, withAnswer: true)
+                printer.question(question, verifiedBy: verificationPath(of: question, folder: folder))
             }
         } else {
             printer.line("\nAnswers: interview show <ID>, or repeat with --seed \(seed) --answers")
         }
         return 0
+    }
+
+    /// The Verified-by test as a path from the current directory, such as
+    /// `Tests/AnswerTests/MemoryTests.swift` from the repository root. The link in the file is
+    /// relative to the question file (`../../Tests/...`), which is not where the reader is.
+    func verificationPath(of question: Question, folder: URL) -> String? {
+        guard let target = question.verifiedBy else { return nil }
+        guard !target.contains("://"), !target.hasPrefix("/") else { return target }
+        let resolved = folder
+            .appendingPathComponent(question.location.file)
+            .deletingLastPathComponent()
+            .appendingPathComponent(target)
+            .standardizedFileURL
+            .path
+        let here = currentDirectory.standardizedFileURL.path
+        let prefix = here.hasSuffix("/") ? here : here + "/"
+        return resolved.hasPrefix(prefix) ? String(resolved.dropFirst(prefix.count)) : resolved
     }
 }
 
@@ -166,16 +183,17 @@ struct Printer {
         }
     }
 
-    mutating func question(_ question: Question, withAnswer: Bool) {
+    /// The question with its answer and sources; `verifiedBy` is the test path to print.
+    mutating func question(_ question: Question, verifiedBy: String?) {
         line("\(question.id): \(question.title)")
         line("\(question.track.displayName) · \(question.topic) · \(question.level.rawValue)\n")
-        if withAnswer { line(question.answer) }
+        line(question.answer)
         if !question.references.isEmpty {
             line("\nReferences:")
             for reference in question.references { line("  \(reference)") }
         }
-        if let verified = question.verifiedBy {
-            line("Verified by: \(verified)")
+        if let verifiedBy {
+            line("Verified by: \(verifiedBy)")
         }
     }
 
