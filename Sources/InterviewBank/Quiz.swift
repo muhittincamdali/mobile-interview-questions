@@ -17,6 +17,7 @@ public struct SeededGenerator: RandomNumberGenerator, Sendable {
     }
 }
 
+/// Repeatable quizzes: the same seed and pool always give the same questions in the same order.
 public enum Quiz {
     /// Picks `count` different questions in a random order that depends only on `seed`.
     ///
