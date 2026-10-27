@@ -86,6 +86,18 @@ struct InterviewToolTests {
         #expect(output.standardOutput.contains("References:\n  https://docs.swift.org/swift-book/\nVerified by: ../../Tests/T.swift"))
     }
 
+    @Test func stripsTerminalControlCharactersFromQuestionText() throws {
+        let hostile = "# Ter\u{1B}[2Jminal\n\n## IOS-003: Set the \u{1B}]0;title\u{07}title?\n\n**Level:** mid\n\nClear\u{1B}[H\u{9B}2J\u{7F} it.\tTab stays.\n\n**Reference:** [R](https://a.example/r)"
+        let fixture = try Fixture(extra: ["questions/ios/hostile.md": hostile])
+        for arguments in [["show", "IOS-003"], ["list", "--search", "title"], ["lint"]] {
+            let output = fixture.run(arguments)
+            let printed = output.standardOutput + output.standardError
+            #expect(!printed.unicodeScalars.contains { $0.properties.generalCategory == .control && $0 != "\n" && $0 != "\t" }, "\(arguments)")
+        }
+        let shown = fixture.run(["show", "IOS-003"]).standardOutput
+        #expect(shown.hasPrefix("IOS-003: Set the ]0;titletitle?\niOS · Ter[2Jminal · mid\n\nClear[H2J it.\tTab stays.\n"))
+    }
+
     @Test func showReportsAnUnknownID() throws {
         let output = try Fixture().run(["show", "IOS-999"])
         #expect(output.status == 1)

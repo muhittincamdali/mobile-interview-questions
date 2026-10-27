@@ -125,20 +125,37 @@ public struct InterviewTool: Sendable {
 }
 
 /// Collects the text a command prints.
+///
+/// Question files can come from any folder passed with `--bank`, so everything is printed through
+/// ``terminalSafe(_:)``: an escape sequence in a title or an answer must not reach the terminal.
 struct Printer {
     private(set) var output = ""
     private(set) var errors = ""
 
     mutating func line(_ text: String) {
-        output += text + "\n"
+        output += Self.terminalSafe(text) + "\n"
     }
 
     mutating func error(_ text: String) {
-        errors += text + "\n"
+        errors += Self.terminalSafe(text) + "\n"
+    }
+
+    /// Removes control characters (C0, DEL and C1, which include ESC and CSI) except line feed and
+    /// tab, so printed text cannot move the cursor, clear the screen or set the window title.
+    static func terminalSafe(_ text: String) -> String {
+        let isUnsafe: (Unicode.Scalar) -> Bool = { scalar in
+            scalar.properties.generalCategory == .control && scalar != "\n" && scalar != "\t"
+        }
+        guard text.unicodeScalars.contains(where: isUnsafe) else { return text }
+        var scalars = String.UnicodeScalarView()
+        scalars.append(contentsOf: text.unicodeScalars.filter { !isUnsafe($0) })
+        return String(scalars)
     }
 
     /// Left-aligned columns; the last column is not padded.
     mutating func table(_ rows: [[String]]) {
+        // Cleaned before measuring, so removed characters do not throw the columns off.
+        let rows = rows.map { $0.map(Self.terminalSafe) }
         guard let columns = rows.first?.count else { return }
         let widths = (0..<columns).map { column in rows.map { $0[column].count }.max() ?? 0 }
         for row in rows {
