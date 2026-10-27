@@ -155,6 +155,21 @@ struct InterviewToolTests {
         #expect(try Data(contentsOf: url).count == 70 * 1024)
     }
 
+    @Test func fileStreamCanWriteEachLineAsItEnds() throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("FileStream-\(UUID().uuidString)")
+        FileManager.default.createFile(atPath: url.path, contents: nil)
+        defer { try? FileManager.default.removeItem(at: url) }
+        let handle = try FileHandle(forWritingTo: url)
+        var stream = FileStream(handle, writesEachLine: true)
+        stream.write("error: one\n")
+        #expect(try String(contentsOf: url, encoding: .utf8) == "error: one\n")
+        stream.write("error: ")
+        #expect(try String(contentsOf: url, encoding: .utf8) == "error: one\n", "a line is written when it ends")
+        stream.write("two\n")
+        #expect(try String(contentsOf: url, encoding: .utf8) == "error: one\nerror: two\n")
+        try handle.close()
+    }
+
     @Test func listFailsWhenNothingMatches() throws {
         let output = try Fixture().run(["list", "--track", "android"])
         #expect(output.status == 1)
